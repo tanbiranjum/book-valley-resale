@@ -95,11 +95,13 @@ const Header = () => {
               Home
             </a>
             <a href="#" className={classes.link}>
-              Learn
+              Blog
             </a>
-            <a href="#" className={classes.link}>
-              Academy
-            </a>
+            {user?.displayName && (
+              <a href="#" className={classes.link}>
+                Dashboard
+              </a>
+            )}
           </Group>
           <Group className={classes.hiddenMobile}>
             {!user?.displayName && (

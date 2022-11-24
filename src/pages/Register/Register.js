@@ -57,26 +57,57 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-
 const Register = () => {
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
+  const [uploadImage, setUploadImage] = useState();
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const { user, login, googleLogin, githubLogin } = useContext(AuthContext);
+  const { user, register, updateUserProfile, googleLogin, githubLogin } =
+    useContext(AuthContext);
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
-    login(data.email, data.password)
-      .then((userCredential) => {
-        setError("");
-        const uid = userCredential.user.uid;
-        getTokenAndNavigate(uid);
+    const formValue = data;
+    const formData = new FormData();
+    formData.append("image", uploadImage);
+
+    fetch(
+      "https://api.imgbb.com/1/upload?key=084083c36347f187e5b7f184e97644bd",
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const photoURL = data.data.display_url;
+        //register user in firebase auth
+        register(formValue.email, formValue.password)
+          .then((userCredential) => {
+            setError("");
+            let { displayName, email } = userCredential;
+
+            // update user profile for registered account
+            updateUserProfile({ displayName: formValue.displayName, photoURL });
+
+            // save user in server and get token from server
+            registerUser({
+              displayName: formValue.displayName,
+              email: formValue.email,
+              role: formValue.seller ? "seller" : "buyer",
+            }).then((data) => {
+              getTokenAndNavigate({ email, role: data.data.user.role });
+            });
+          })
+          .catch((error) => {
+            setError(handleError(error.code));
+          });
       })
-      .catch((error) => {
-        setError(handleError(error.code));
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -147,8 +178,10 @@ const Register = () => {
 
   const form = useForm({
     initialValues: {
+      displayName: "",
       email: "",
-      termsOfService: false,
+      password: "",
+      seller: false,
     },
 
     validate: {
@@ -183,18 +216,26 @@ const Register = () => {
             Github
           </Button>
         </Group>
-        <form>
-          <TextInput label="Name" placeholder="John Doe" size="md" mb="md" />
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <TextInput
+            label="Name"
+            placeholder="John Doe"
+            size="md"
+            mb="md"
+            {...form.getInputProps("displayName")}
+          />
           <TextInput
             label="Email address"
             placeholder="hello@gmail.com"
             size="md"
+            {...form.getInputProps("email")}
           />
           <PasswordInput
             label="Password"
             placeholder="Your password"
             mt="md"
             size="md"
+            {...form.getInputProps("password")}
           />
           <FileInput
             label="Display Image"
@@ -202,6 +243,9 @@ const Register = () => {
             icon={<IconUpload size={14} />}
             mt="md"
             size="md"
+            onChange={(image) => {
+              setUploadImage(image);
+            }}
           />
           <Switch
             label="Register as Seller"
@@ -209,11 +253,13 @@ const Register = () => {
             radius="lg"
             labelPosition="left"
             sx={{ marginLeft: "-6px" }}
+            {...form.getInputProps("seller", { type: "checkbox" })}
           />
           <Button
             fullWidth
             mt="xl"
             size="md"
+            type="submit"
             //   onClick={() => setVisible((v) => !v)}
           >
             Login

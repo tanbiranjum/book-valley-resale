@@ -11,6 +11,7 @@ import {
   Group,
   LoadingOverlay,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
 import { IconBrandGoogle, IconBrandGithub } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
@@ -54,7 +55,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-
 const Login = () => {
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
@@ -62,16 +62,17 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
   const { user, login, googleLogin, githubLogin } = useContext(AuthContext);
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
+    console.log("hello", data);
     login(data.email, data.password)
       .then((userCredential) => {
         setError("");
-        const uid = userCredential.user.uid;
-        getTokenAndNavigate(uid);
+        getUserByEmail(data.email).then((data) => {
+          getTokenAndNavigate({ email: data.email, role: data.data.user.role });
+        });
       })
       .catch((error) => {
         setError(handleError(error.code));
@@ -143,6 +144,17 @@ const Login = () => {
     }
   }, []);
 
+  const form = useForm({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    },
+  });
+
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
@@ -170,27 +182,31 @@ const Login = () => {
             Github
           </Button>
         </Group>
-
-        <TextInput
-          label="Email address"
-          placeholder="hello@gmail.com"
-          size="md"
-        />
-        <PasswordInput
-          label="Password"
-          placeholder="Your password"
-          mt="md"
-          size="md"
-        />
-        <Checkbox label="Keep me logged in" mt="xl" size="md" />
-        <Button
-          fullWidth
-          mt="xl"
-          size="md"
-          //   onClick={() => setVisible((v) => !v)}
-        >
-          Login
-        </Button>
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <TextInput
+            label="Email address"
+            placeholder="hello@gmail.com"
+            size="md"
+            {...form.getInputProps("email")}
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Your password"
+            mt="md"
+            size="md"
+            {...form.getInputProps("password")}
+          />
+          <Checkbox label="Keep me logged in" mt="xl" size="md" />
+          <Button
+            fullWidth
+            mt="xl"
+            size="md"
+            type="submit"
+            //   onClick={() => setVisible((v) => !v)}
+          >
+            Login
+          </Button>
+        </form>
 
         <Text align="center" mt="md">
           Don&apos;t have an account?{" "}
