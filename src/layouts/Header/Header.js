@@ -123,7 +123,7 @@ const Header = () => {
                   navigate("/register");
                 }}
               >
-                Sign up
+                Register
               </Button>
             )}
           </Group>
@@ -187,7 +187,7 @@ const Header = () => {
                 navigate("/register");
               }}
             >
-              Sign up
+              Register
             </Button>
           </Group>
         </ScrollArea>

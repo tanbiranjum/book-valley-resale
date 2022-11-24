@@ -72,8 +72,8 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     try {
-      return signOut(auth);
       removeTokenFromLocalStorage();
+      return signOut(auth);
     } catch (error) {
       console.log(error);
     }
