@@ -16,7 +16,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { IconBrandGoogle, IconBrandGithub } from "@tabler/icons";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
@@ -78,7 +78,7 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const { login, googleLogin, githubLogin } = useContext(AuthContext);
+  const { user, login, googleLogin, githubLogin } = useContext(AuthContext);
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
@@ -111,15 +111,13 @@ const Login = () => {
         const { email, displayName } = userCredential.user;
         getUserByEmail(email).then((data) => {
           if (data.data.user) {
-            console.log("user already exist");
+            getTokenAndNavigate({ email, role: data.data.user.role });
             return;
           }
           registerUser({ displayName, email }).then((data) => {
-            console.log(data);
+            getTokenAndNavigate({ email, role: data.data.user.role });
           });
         });
-        return;
-        // getTokenAndNavigate(uid);
       })
       .catch((error) => {
         setError(handleError(error.code));
@@ -140,8 +138,8 @@ const Login = () => {
 
   // Get token from server and navigate to home page
   const getTokenAndNavigate = (data) => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/api/v1/auth/login`, {
-      method: "GET",
+    fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         data,
@@ -153,6 +151,13 @@ const Login = () => {
         navigate("/");
       });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>

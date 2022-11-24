@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 
 import app from "../../firebase.config";
+import { removeTokenFromLocalStorage } from "../../utils/utils";
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -72,6 +73,7 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     try {
       return signOut(auth);
+      removeTokenFromLocalStorage();
     } catch (error) {
       console.log(error);
     }
