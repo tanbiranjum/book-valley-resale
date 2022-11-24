@@ -77,7 +77,7 @@ const HeroHeader = () => {
   const { classes } = useStyles();
   return (
     <div className={classes.root}>
-      <Container size="lg">
+      <Container size="xl">
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>

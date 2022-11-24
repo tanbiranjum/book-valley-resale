@@ -23,7 +23,7 @@ import {
   IconCoin,
   IconChevronDown,
 } from "@tabler/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const useStyles = createStyles((theme) => ({
@@ -91,16 +91,16 @@ const Header = () => {
             spacing={0}
             className={classes.hiddenMobile}
           >
-            <a href="#" className={classes.link}>
+            <Link to="/" className={classes.link}>
               Home
-            </a>
-            <a href="#" className={classes.link}>
+            </Link>
+            <Link to="/blog" className={classes.link}>
               Blog
-            </a>
+            </Link>
             {user?.displayName && (
-              <a href="#" className={classes.link}>
+              <Link to="/dashboard" className={classes.link}>
                 Dashboard
-              </a>
+              </Link>
             )}
           </Group>
           <Group className={classes.hiddenMobile}>
