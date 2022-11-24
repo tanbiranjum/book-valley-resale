@@ -12,11 +12,16 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { IconBrandGoogle, IconBrandGithub } from "@tabler/icons";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import { setTokenInLocalStorage } from "../../utils/utils";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -53,6 +58,11 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
+
 const Login = () => {
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
@@ -72,7 +82,6 @@ const Login = () => {
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
-    setLoading(true);
     login(data.email, data.password)
       .then((userCredential) => {
         setError("");
@@ -80,7 +89,6 @@ const Login = () => {
         getTokenAndNavigate(uid);
       })
       .catch((error) => {
-        setLoading(false);
         setError(handleError(error.code));
       });
   };
@@ -100,8 +108,18 @@ const Login = () => {
     googleLogin()
       .then((userCredential) => {
         setError("");
-        const uid = userCredential.user.uid;
-        getTokenAndNavigate(uid);
+        const { email, displayName } = userCredential.user;
+        getUserByEmail(email).then((data) => {
+          if (data.data.user) {
+            console.log("user already exist");
+            return;
+          }
+          registerUser({ displayName, email }).then((data) => {
+            console.log(data);
+          });
+        });
+        return;
+        // getTokenAndNavigate(uid);
       })
       .catch((error) => {
         setError(handleError(error.code));
@@ -112,8 +130,8 @@ const Login = () => {
     githubLogin()
       .then((userCredential) => {
         setError("");
-        const uid = userCredential.user.uid;
-        getTokenAndNavigate(uid);
+        const email = userCredential.user.email;
+        // getTokenAndNavigate(uid);
       })
       .catch((error) => {
         setError(handleError(error.code));
@@ -121,17 +139,16 @@ const Login = () => {
   };
 
   // Get token from server and navigate to home page
-  const getTokenAndNavigate = (uid) => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/api/v1/auth/token`, {
+  const getTokenAndNavigate = (data) => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/api/v1/auth/login`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        uid: uid,
+        data,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        setLoading(false);
         setTokenInLocalStorage(data.token);
         navigate("/");
       });
@@ -151,7 +168,12 @@ const Login = () => {
         </Title>
 
         <Group grow mb="md" mt="md">
-          <Button radius="xs" variant="light" leftIcon={<IconBrandGoogle />}>
+          <Button
+            radius="xs"
+            variant="light"
+            leftIcon={<IconBrandGoogle />}
+            onClick={handleGoogleLogin}
+          >
             Google
           </Button>
           <Button radius="xs" variant="light" leftIcon={<IconBrandGithub />}>
@@ -175,7 +197,7 @@ const Login = () => {
           fullWidth
           mt="xl"
           size="md"
-          onClick={() => setVisible((v) => !v)}
+          //   onClick={() => setVisible((v) => !v)}
         >
           Login
         </Button>

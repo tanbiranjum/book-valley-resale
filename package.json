@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
+    "@hookform/resolvers": "^2.9.10",
     "@mantine/core": "^5.8.3",
     "@mantine/hooks": "^5.8.3",
     "@tabler/icons": "^1.112.0",

@@ -1,11 +1,11 @@
 export const setTokenInLocalStorage = (token) => {
-  localStorage.setItem("token", token);
+  localStorage.setItem("book-valley-auth-token", token);
 };
 
 export const getTokenFromLocalStorage = () => {
-  return localStorage.getItem("token");
+  return localStorage.getItem("book-valley-auth-token");
 };
 
 export const removeTokenFromLocalStorage = () => {
-  localStorage.removeItem("token");
+  localStorage.removeItem("book-valley-auth-token");
 };

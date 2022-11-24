@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   createStyles,
   Header as MantineHeader,
@@ -24,6 +24,7 @@ import {
   IconChevronDown,
 } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -73,6 +74,13 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const { user, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <Box>
       <MantineHeader height={60} px="md">
@@ -94,21 +102,30 @@ const Header = () => {
             </a>
           </Group>
           <Group className={classes.hiddenMobile}>
-            <Button
-              variant="default"
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Log in
-            </Button>
-            <Button
-              onClick={() => {
-                navigate("/register");
-              }}
-            >
-              Sign up
-            </Button>
+            {!user?.displayName && (
+              <Button
+                variant="default"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Log in
+              </Button>
+            )}
+            {user?.displayName && (
+              <Button variant="default" onClick={handleLogout}>
+                Log out
+              </Button>
+            )}
+            {!user?.displayName && (
+              <Button
+                onClick={() => {
+                  navigate("/register");
+                }}
+              >
+                Sign up
+              </Button>
+            )}
           </Group>
           <Burger
             opened={drawerOpened}
