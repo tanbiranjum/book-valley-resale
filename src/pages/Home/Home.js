@@ -1,10 +1,11 @@
 import React from "react";
 import Button from "../../components/Button/Button";
+import HeroHeader from "../../components/HeroHeader/HeroHeader";
 
 const Home = () => {
   return (
     <div>
-      <Button name="click me!" />
+      <HeroHeader />
     </div>
   );
 };
