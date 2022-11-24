@@ -2,14 +2,9 @@ import React from "react";
 import {
   createStyles,
   Header as MantineHeader,
-  HoverCard,
   Group,
   Button,
   UnstyledButton,
-  Text,
-  SimpleGrid,
-  ThemeIcon,
-  Anchor,
   Divider,
   Center,
   Box,
@@ -28,6 +23,7 @@ import {
   IconCoin,
   IconChevronDown,
 } from "@tabler/icons";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -75,8 +71,10 @@ const Header = () => {
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
 
+  const navigate = useNavigate();
+
   return (
-    <Box pb={120}>
+    <Box>
       <MantineHeader height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           Book Valley
@@ -96,8 +94,21 @@ const Header = () => {
             </a>
           </Group>
           <Group className={classes.hiddenMobile}>
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Button
+              variant="default"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Log in
+            </Button>
+            <Button
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Sign up
+            </Button>
           </Group>
           <Burger
             opened={drawerOpened}
@@ -146,8 +157,21 @@ const Header = () => {
           />
 
           <Group position="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Button
+              variant="default"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Log in
+            </Button>
+            <Button
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Sign up
+            </Button>
           </Group>
         </ScrollArea>
       </Drawer>
