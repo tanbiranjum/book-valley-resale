@@ -12,12 +12,8 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-
 import { IconBrandGoogle, IconBrandGithub } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
@@ -58,10 +54,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required(),
-});
 
 const Login = () => {
   const { classes } = useStyles();
@@ -70,13 +62,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
 
   const { user, login, googleLogin, githubLogin } = useContext(AuthContext);
 

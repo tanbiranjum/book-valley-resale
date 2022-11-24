@@ -13,12 +13,10 @@ import {
   Switch,
 } from "@mantine/core";
 
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "@mantine/form";
 
 import { IconBrandGoogle, IconBrandGithub, IconUpload } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
@@ -59,10 +57,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required(),
-});
 
 const Register = () => {
   const { classes } = useStyles();
@@ -70,14 +64,6 @@ const Register = () => {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
 
   const { user, login, googleLogin, githubLogin } = useContext(AuthContext);
 
@@ -159,6 +145,17 @@ const Register = () => {
     }
   }, []);
 
+  const form = useForm({
+    initialValues: {
+      email: "",
+      termsOfService: false,
+    },
+
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    },
+  });
+
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
@@ -186,7 +183,7 @@ const Register = () => {
             Github
           </Button>
         </Group>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <TextInput label="Name" placeholder="John Doe" size="md" mb="md" />
           <TextInput
             label="Email address"
