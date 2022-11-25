@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Menu,
   ScrollArea,
+  Badge,
 } from "@mantine/core";
 import {
   IconPencil,
@@ -17,10 +18,25 @@ import {
 } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import formatDistance from "date-fns/formatDistance";
 
 const MyBooks = () => {
   const [books, setBooks] = useState([]);
   const { user } = useContext(AuthContext);
+
+  const handleAdvertise = (id) => {
+    fetch(`${process.env.REACT_APP_API_URL}/books/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ isAdvertise: true }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/books/seller/${user.email}`)
@@ -46,10 +62,17 @@ const MyBooks = () => {
         </Group>
       </td>
       <td>
-        <Text size="sm">{item.email}</Text>
-        <Text size="xs" color="dimmed">
-          Email
+        <Text size="sm">
+          {formatDistance(new Date(item.createdAt), new Date())}
         </Text>
+        <Text size="xs" color="dimmed">
+          Time
+        </Text>
+      </td>
+      <td>
+        <Badge sx={{ padding: "8px" }} color="green">
+          {item.status}
+        </Badge>
       </td>
       <td>
         <Text size="sm">$ {item.sellingPrice}</Text>
@@ -69,11 +92,11 @@ const MyBooks = () => {
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item icon={<IconMessages size={16} stroke={1.5} />}>
-                Send message
-              </Menu.Item>
-              <Menu.Item icon={<IconNote size={16} stroke={1.5} />}>
-                Add note
+              <Menu.Item
+                icon={<IconTrash size={16} stroke={1.5} />}
+                color="red"
+              >
+                Delete
               </Menu.Item>
               <Menu.Item
                 icon={<IconMicrophone size={16} stroke={1.5} />}
