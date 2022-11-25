@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { createStyles, Navbar, Group, Code } from "@mantine/core";
 import jwt_decode from "jwt-decode";
 import {
@@ -16,7 +16,8 @@ import {
   IconUser,
 } from "@tabler/icons";
 import { getTokenFromLocalStorage } from "../../utils/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -115,6 +116,16 @@ const buyer = [
   { link: "/dashboard/wishlist", label: "Wishlist", icon: IconHeart },
 ];
 
+const seller = [
+  { link: "/dashboard/add-product", label: "Add Product", icon: IconHeart },
+  {
+    link: "/dashboard/my-products",
+    label: "My Products",
+    icon: IconBellRinging,
+  },
+  { link: "/dashboard/my-buyers", label: "My Buyers", icon: IconHeart },
+];
+
 const admin = [
   { link: "/dashboard/all-users", label: "All Users", icon: IconUsers },
   { link: "/dashboard/all-sellers", label: "All Sellers", icon: IconUser },
@@ -125,6 +136,13 @@ const Sidebar = () => {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
   const [data, setData] = useState([]);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     let decoded = jwt_decode(getTokenFromLocalStorage());
@@ -132,6 +150,8 @@ const Sidebar = () => {
       setData(buyer);
     } else if (decoded.role === "admin") {
       setData(admin);
+    } else if (decoded.role === "seller") {
+      setData(seller);
     }
   }, []);
 
@@ -162,23 +182,10 @@ const Sidebar = () => {
       </Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
+        <div className={classes.link} onClick={handleLogout}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
-        </a>
+        </div>
       </Navbar.Section>
     </Navbar>
   );
