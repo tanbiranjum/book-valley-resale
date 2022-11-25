@@ -117,10 +117,10 @@ const buyer = [
 ];
 
 const seller = [
-  { link: "/dashboard/add-product", label: "Add Product", icon: IconHeart },
+  { link: "/dashboard/add-book", label: "Add Book", icon: IconHeart },
   {
-    link: "/dashboard/my-products",
-    label: "My Products",
+    link: "/dashboard/my-books",
+    label: "My Books",
     icon: IconBellRinging,
   },
   { link: "/dashboard/my-buyers", label: "My Buyers", icon: IconHeart },
@@ -172,7 +172,7 @@ const Sidebar = () => {
   ));
 
   return (
-    <Navbar sx={{ height: "100vh" }} p="md" className={classes.navbar}>
+    <Navbar sx={{ height: "100%" }} p="md" className={classes.navbar}>
       <Navbar.Section grow>
         <Group className={classes.header} position="apart">
           Book Valley

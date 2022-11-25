@@ -5,16 +5,21 @@ import Sidebar from "../../layouts/Sidebar/Sidebar";
 
 const Dashboard = () => {
   return (
-    <div>
-      <Grid>
-        <Grid.Col lg={3}>
-          <Sidebar />
-        </Grid.Col>
-        <Grid.Col lg={9}>
+    <Grid
+      sx={{
+        height: "100vh",
+        width: "100%",
+      }}
+    >
+      <Grid.Col lg={3}>
+        <Sidebar />
+      </Grid.Col>
+      <Grid.Col lg={9}>
+        <div style={{ overflowY: "scroll", height: "98vh" }}>
           <Outlet />
-        </Grid.Col>
-      </Grid>
-    </div>
+        </div>
+      </Grid.Col>
+    </Grid>
   );
 };
 

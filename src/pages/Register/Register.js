@@ -260,7 +260,7 @@ const Register = () => {
             mt="xl"
             size="md"
             type="submit"
-            //   onClick={() => setVisible((v) => !v)}
+            // onClick={() => setVisible((v) => !v)}
           >
             Login
           </Button>
