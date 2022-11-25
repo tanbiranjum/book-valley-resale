@@ -120,7 +120,7 @@ const BookCard = () => {
           </div>
 
           <Button radius="xl" style={{ flex: 1 }}>
-            Purchase now
+            Book now
           </Button>
         </Group>
       </Card.Section>

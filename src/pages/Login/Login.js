@@ -66,12 +66,14 @@ const Login = () => {
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
-    console.log("hello", data);
     login(data.email, data.password)
       .then((userCredential) => {
         setError("");
         getUserByEmail(data.email).then((data) => {
-          getTokenAndNavigate({ email: data.email, role: data.data.user.role });
+          getTokenAndNavigate({
+            email: data.data.user.email,
+            role: data.data.user.role,
+          });
         });
       })
       .catch((error) => {
@@ -124,12 +126,13 @@ const Login = () => {
 
   // Get token from server and navigate to home page
   const getTokenAndNavigate = (data) => {
+    console.log(data);
     fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        data,
       },
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((data) => {

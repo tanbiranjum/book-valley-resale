@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createStyles, Navbar, Group, Code } from "@mantine/core";
+import jwt_decode from "jwt-decode";
 import {
   IconBellRinging,
   IconFingerprint,
@@ -10,7 +11,12 @@ import {
   IconReceipt2,
   IconSwitchHorizontal,
   IconLogout,
+  IconHeart,
+  IconUsers,
+  IconUser,
 } from "@tabler/icons";
+import { getTokenFromLocalStorage } from "../../utils/utils";
+import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -105,36 +111,48 @@ const data = [
 ];
 
 const buyer = [
-  { link: "", label: "Novel", icon: IconBellRinging },
-  { link: "", label: "Fiction", icon: IconReceipt2 },
-  { link: "", label: "Non-Fiction", icon: IconFingerprint },
-  { link: "", label: "History", icon: IconKey },
-  { link: "", label: "Humor", icon: IconDatabaseImport },
+  { link: "/dashboard/my-orders", label: "My Orders", icon: IconBellRinging },
+  { link: "/dashboard/wishlist", label: "Wishlist", icon: IconHeart },
+];
+
+const admin = [
+  { link: "/dashboard/all-users", label: "All Users", icon: IconUsers },
+  { link: "/dashboard/all-sellers", label: "All Sellers", icon: IconUser },
+  { link: "/dashboard/all-buyers", label: "All Buyers", icon: IconUser },
 ];
 
 const Sidebar = () => {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    let decoded = jwt_decode(getTokenFromLocalStorage());
+    if (decoded.role === "buyer") {
+      setData(buyer);
+    } else if (decoded.role === "admin") {
+      setData(admin);
+    }
+  }, []);
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={cx(classes.link, {
         [classes.linkActive]: item.label === active,
       })}
-      href={item.link}
+      to={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
+      onClick={() => {
         setActive(item.label);
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ));
 
   return (
-    <Navbar height={700} width={{ sm: 300 }} p="md" className={classes.navbar}>
+    <Navbar sx={{ height: "100vh" }} p="md" className={classes.navbar}>
       <Navbar.Section grow>
         <Group className={classes.header} position="apart">
           Book Valley
