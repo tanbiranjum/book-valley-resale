@@ -182,7 +182,13 @@ const Sidebar = () => {
       </Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
-        <div className={classes.link} onClick={handleLogout}>
+        <div
+          className={classes.link}
+          onClick={handleLogout}
+          style={{
+            cursor: "pointer",
+          }}
+        >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
         </div>

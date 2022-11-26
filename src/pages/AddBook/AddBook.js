@@ -24,6 +24,7 @@ const AddBook = () => {
   const form = useForm({
     initialValues: {
       title: "",
+      author: "",
       description: "",
       location: "",
       category: "",
@@ -100,6 +101,12 @@ const AddBook = () => {
             placeholder="Book title"
             required
             {...form.getInputProps("title")}
+          />
+          <TextInput
+            label="Author"
+            placeholder="Author name"
+            required
+            {...form.getInputProps("author")}
           />
           <FileInput
             label="Upload Image"
