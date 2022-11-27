@@ -10,7 +10,9 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import DeleteUserDialogue from "../../components/Dialogue/DeleteUserDialogue/DeleteUserDialogue";
 
 const jobColors = {
   admin: "blue",
@@ -18,39 +20,24 @@ const jobColors = {
   buyer: "pink",
 };
 
-const data = [
-  {
-    name: "John Doe",
-    job: "Buyer",
-    email: "johndoe@gmail.com",
-    phone: "01703248482",
-  },
-  {
-    name: "John Doe",
-    job: "Buyer",
-    email: "johndoe@gmail.com",
-    phone: "01703248482",
-  },
-];
-
 const AllUser = () => {
   const theme = useMantineTheme();
-  const [data, setData] = useState([]);
+  const [opened, setOpened] = useState(false);
 
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/users`)
+  const { data: users, isLoading } = useQuery(["allUsers"], () => {
+    return fetch(`${process.env.REACT_APP_API_URL}/users`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setData(data.data.users);
+        return data.data.users;
       });
-  }, []);
+  });
 
-  const rows = data?.map((item) => (
+  const rows = users?.map((item) => (
     <tr key={item.name}>
       <td>
         <Group spacing="sm">
-          <Avatar size={30} src={item.avatar} radius={30} />
+          <Avatar size={30} src={item.photoURL} radius={30} />
           <Text size="sm" weight={500}>
             {item.displayName}
           </Text>
@@ -80,9 +67,14 @@ const AllUser = () => {
           <ActionIcon>
             <IconPencil size={16} stroke={1.5} />
           </ActionIcon>
-          <ActionIcon color="red">
+          <ActionIcon color="red" onClick={() => setOpened(true)}>
             <IconTrash size={16} stroke={1.5} />
           </ActionIcon>
+          <DeleteUserDialogue
+            opened={opened}
+            setOpened={setOpened}
+            userId={item._id}
+          />
         </Group>
       </td>
     </tr>
@@ -90,6 +82,7 @@ const AllUser = () => {
 
   return (
     <ScrollArea>
+      {console.log(users)}
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>
           <tr>

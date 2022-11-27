@@ -96,13 +96,13 @@ const Login = () => {
     googleLogin()
       .then((userCredential) => {
         setError("");
-        const { email, displayName } = userCredential.user;
+        const { email, photoURL, displayName } = userCredential.user;
         getUserByEmail(email).then((data) => {
           if (data.data.user) {
             getTokenAndNavigate({ email, role: data.data.user.role });
             return;
           }
-          registerUser({ displayName, email }).then((data) => {
+          registerUser({ displayName, photoURL, email }).then((data) => {
             getTokenAndNavigate({ email, role: data.data.user.role });
           });
         });
@@ -126,7 +126,6 @@ const Login = () => {
 
   // Get token from server and navigate to home page
   const getTokenAndNavigate = (data) => {
-    console.log(data);
     fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
       headers: {

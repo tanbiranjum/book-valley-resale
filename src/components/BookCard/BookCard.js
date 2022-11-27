@@ -117,10 +117,15 @@ const BookCard = ({ item }) => {
             {item.condition === "new" ? "New" : "Used"}
           </Badge>
           <br />
-          <Badge mt="sm">{`Posted ${formatDistance(
-            new Date(item.createdAt),
-            new Date()
-          )} ago`}</Badge>
+          <Text mt="sm" size="sm" weight="400">
+            <Text color="cyan" weight="500">
+              {item.sellerName}
+            </Text>
+            {` Posted ${formatDistance(
+              new Date(item.createdAt),
+              new Date()
+            )} ago`}
+          </Text>
         </Card.Section>
 
         <Card.Section className={classes.section} mt="md">

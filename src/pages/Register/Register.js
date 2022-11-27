@@ -96,6 +96,7 @@ const Register = () => {
             // save user in server and get token from server
             registerUser({
               displayName: formValue.displayName,
+              photoURL: photoURL,
               email: formValue.email,
               role: formValue.seller ? "seller" : "buyer",
             }).then((data) => {
@@ -126,13 +127,13 @@ const Register = () => {
     googleLogin()
       .then((userCredential) => {
         setError("");
-        const { email, displayName } = userCredential.user;
+        const { email, displayName, photoURL } = userCredential.user;
         getUserByEmail(email).then((data) => {
           if (data.data.user) {
             getTokenAndNavigate({ email, role: data.data.user.role });
             return;
           }
-          registerUser({ displayName, email }).then((data) => {
+          registerUser({ displayName, photoURL, email }).then((data) => {
             getTokenAndNavigate({ email, role: data.data.user.role });
           });
         });
