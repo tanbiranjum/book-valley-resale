@@ -117,6 +117,7 @@ const ProductRow = ({ item }) => {
               <Menu.Item
                 icon={<IconMicrophone size={16} stroke={1.5} />}
                 color="red"
+                disabled={item.status === "sold"}
                 onClick={() => changeAdvertiseStatus.mutate(item._id)}
               >
                 {item.isAdvertise ? "Remove from advertise" : "Advertise"}

@@ -4,12 +4,14 @@ import {
   Container,
   ActionIcon,
   Group,
+  Avatar,
 } from "@mantine/core";
 import {
   IconBrandTwitter,
   IconBrandYoutube,
   IconBrandInstagram,
 } from "@tabler/icons";
+import Logo from "../../assets/book-logo.png";
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -120,26 +122,33 @@ const Footer = () => {
     <footer className={classes.footer}>
       <Container size="xl" className={classes.inner}>
         <div className={classes.logo}>
-          BOOK VALLEY
+          <Avatar src={Logo}></Avatar>
+          <Text weight="bold">BOOK VALLEY</Text>
           <Text size="xs" color="dimmed" className={classes.description}>
-            Build fully functional accessible web applications faster than ever
+            Make the world more open and connected by sharing knowledge.
           </Text>
         </div>
       </Container>
       <Container size="xl" className={classes.afterFooter}>
         <Text color="dimmed" size="sm">
-          © 2020 mantine.dev. All rights reserved.
+          © 2022 Book Valley. All rights reserved.
         </Text>
 
         <Group spacing={0} className={classes.social} position="right" noWrap>
           <ActionIcon size="lg">
-            <IconBrandTwitter size={18} stroke={1.5} />
+            <a href="https://twitter.com" className={classes.link}>
+              <IconBrandTwitter size={18} stroke={1.5} />
+            </a>
           </ActionIcon>
           <ActionIcon size="lg">
-            <IconBrandYoutube size={18} stroke={1.5} />
+            <a href="https://youtube.com" className={classes.link}>
+              <IconBrandYoutube size={18} stroke={1.5} />
+            </a>
           </ActionIcon>
           <ActionIcon size="lg">
-            <IconBrandInstagram size={18} stroke={1.5} />
+            <a href="https://instagram.com" className={classes.link}>
+              <IconBrandInstagram size={18} stroke={1.5} />
+            </a>
           </ActionIcon>
         </Group>
       </Container>

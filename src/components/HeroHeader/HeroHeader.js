@@ -41,7 +41,7 @@ const useStyles = createStyles((theme) => ({
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontWeight: 900,
     lineHeight: 1.05,
-    maxWidth: 500,
+    maxWidth: 600,
     fontSize: 48,
 
     [theme.fn.smallerThan("md")]: {
@@ -81,22 +81,22 @@ const HeroHeader = () => {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              A{" "}
+              Make{" "}
               <Text
                 component="span"
                 inherit
                 variant="gradient"
                 gradient={{ from: "pink", to: "yellow" }}
               >
-                fully featured
+                The World
               </Text>{" "}
-              React components library
+              More Open and Connected
             </Title>
 
             <Text className={classes.description} mt={30}>
-              Build fully functional accessible web applications with ease –
-              Mantine includes more than 100 customizable components and hooks
-              to cover you in any situation
+              Whether you are selling online or buying books, we are here to
+              help you to make things easier. The process is as easy as it
+              takes.
             </Text>
 
             <Button

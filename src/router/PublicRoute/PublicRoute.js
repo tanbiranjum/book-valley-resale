@@ -11,6 +11,7 @@ import Login from "../../pages/Login/Login";
 import MyBooks from "../../pages/MyBooks/MyBooks";
 import MyBuyers from "../../pages/MyBuyers/MyBuyers";
 import MyOrders from "../../pages/MyOrders/MyOrders";
+import Payment from "../../pages/Payment/Payment";
 import Register from "../../pages/Register/Register";
 import Wishlist from "../../pages/Wishlist/Wishlist";
 
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/my-buyers",
         element: <MyBuyers />,
+      },
+      {
+        path: "/dashboard/payment/:cartId",
+        element: <Payment />,
       },
     ],
   },

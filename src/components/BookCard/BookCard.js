@@ -18,6 +18,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import CheckoutForm from "../CheckoutForm/CheckoutForm";
 import WishButton from "../WishButton/WishButton";
+import formatDistance from "date-fns/formatDistance";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -99,9 +100,7 @@ const BookCard = ({ item }) => {
             <Text size="xs" color="dimmed">
               {item.description}
             </Text>
-            <WishButton
-              bookId={item._id}
-            />
+            <WishButton bookId={item._id} />
           </div>
         </Group>
 
@@ -117,6 +116,11 @@ const BookCard = ({ item }) => {
           <Badge variant="outline" sx={{ marginLeft: "8px" }}>
             {item.condition === "new" ? "New" : "Used"}
           </Badge>
+          <br />
+          <Badge mt="sm">{`Posted ${formatDistance(
+            new Date(item.createdAt),
+            new Date()
+          )} ago`}</Badge>
         </Card.Section>
 
         <Card.Section className={classes.section} mt="md">

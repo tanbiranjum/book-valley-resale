@@ -22,8 +22,10 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import formatDistance from "date-fns/formatDistance";
+import { useNavigate } from "react-router-dom";
 
 const Rows = ({ item }) => {
+  const navigate = useNavigate();
   return (
     <tr key={item._id}>
       <td>
@@ -62,7 +64,13 @@ const Rows = ({ item }) => {
       </td>
       <td>
         <Group spacing={0} position="right">
-          <Button>Pay Now</Button>
+          <Button
+            onClick={() => {
+              navigate(`/dashboard/payment/${item._id}`);
+            }}
+          >
+            Pay Now
+          </Button>
         </Group>
       </td>
     </tr>

@@ -17,6 +17,7 @@ import {
   IconReceiptTax,
 } from "@tabler/icons";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const mockdata = [
   { title: "Fiction", icon: IconCreditCard, color: "violet" },
@@ -40,6 +41,11 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 700,
   },
 
+  link: {
+    textDecoration: "none",
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+  },
+
   item: {
     display: "flex",
     flexDirection: "column",
@@ -61,22 +67,24 @@ const useStyles = createStyles((theme) => ({
 
 const CategorySection = () => {
   const { classes, theme } = useStyles();
-  const [categories, setCategoires] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/categories`)
       .then((res) => res.json())
       .then((data) => {
-        setCategoires(data.data.categories);
+        setCategories(data.data.categories);
       });
   }, []);
 
   const items = categories.map((item) => (
     <UnstyledButton key={item._id} className={classes.item}>
-      <IconCreditCard color={theme.colors.blue[6]} size="32px" />
-      <Text size="xs" mt={7}>
-        {item.name}
-      </Text>
+      <Link to={`/category/${item._id}`} className={classes.link}>
+        <IconCreditCard color={theme.colors.blue[6]} size="32px" />
+        <Text size="xs" mt={7}>
+          {item.name}
+        </Text>
+      </Link>
     </UnstyledButton>
   ));
 

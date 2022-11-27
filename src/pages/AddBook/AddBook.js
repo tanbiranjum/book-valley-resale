@@ -11,14 +11,19 @@ import {
   Group,
   Button,
   FileInput,
+  Flex,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import { showNotification } from "@mantine/notifications";
+import { IconCircleCheck, IconCross } from "@tabler/icons";
 
 const AddBook = () => {
   const [categories, setCategories] = useState([]);
   const [uploadImage, setUploadImage] = useState();
+  const [visible, setVisible] = useState(false);
   const { user } = useContext(AuthContext);
 
   const form = useForm({
@@ -36,6 +41,7 @@ const AddBook = () => {
   });
 
   const handleSubmit = (data) => {
+    setVisible(true);
     const formValue = data;
     const formData = new FormData();
     formData.append("image", uploadImage);
@@ -53,6 +59,7 @@ const AddBook = () => {
         formValue.photo = photo;
         formValue.seller = user.email;
         handleSaveBook(formValue);
+        form.reset();
       });
   };
 
@@ -66,7 +73,22 @@ const AddBook = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        alert("Book added successfully");
+        showNotification({
+          title: "Book Added Successfully",
+          message: "Your book has been added successfully",
+          color: "green",
+          icon: <IconCircleCheck />,
+        });
+        setVisible(false);
+      })
+      .catch((err) => {
+        showNotification({
+          title: "Oops!",
+          message: "Something went wrong",
+          color: "red",
+          icon: <IconCross />,
+        });
+        setVisible(false);
       });
   };
 
@@ -96,6 +118,7 @@ const AddBook = () => {
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={form.onSubmit(handleSubmit)}>
+          <LoadingOverlay visible={visible} />
           <TextInput
             label="Title"
             placeholder="Book title"
@@ -106,14 +129,15 @@ const AddBook = () => {
             label="Author"
             placeholder="Author name"
             required
+            mt="sm"
             {...form.getInputProps("author")}
           />
           <FileInput
             label="Upload Image"
             placeholder="Upload files"
             accept="image/png,image/jpeg"
-            // TODO
-            // required
+            required
+            mt="sm"
             onChange={(image) => {
               setUploadImage(image);
             }}
@@ -122,60 +146,71 @@ const AddBook = () => {
             label="Location"
             placeholder="California, United States"
             required
+            mt="sm"
             {...form.getInputProps("location")}
           />
-          <TextInput
-            label="Original Price"
-            placeholder="old price"
-            required
-            {...form.getInputProps("originalPrice")}
-          />
-          <TextInput
-            label="Sell Price"
-            placeholder="sell price"
-            required
-            {...form.getInputProps("sellingPrice")}
-          />
+          <Flex gap="md" mt="sm">
+            <TextInput
+              label="Original Price"
+              placeholder="old price"
+              required
+              sx={{ width: "50%" }}
+              {...form.getInputProps("originalPrice")}
+            />
+            <TextInput
+              label="Sell Price"
+              placeholder="sell price"
+              required
+              sx={{ width: "50%" }}
+              {...form.getInputProps("sellingPrice")}
+            />
+          </Flex>
           <TextInput
             label="Description"
             placeholder="description"
             required
+            mt="sm"
             {...form.getInputProps("description")}
           />
-          <Select
-            label="Category"
-            placeholder="Pick one"
-            required
-            data={categories?.map((item) => ({
-              value: item._id,
-              label: item.name,
-            }))}
-            {...form.getInputProps("category")}
-          />
-          <Select
-            label="Use of Years"
-            placeholder="Choose one"
-            required
-            data={[
-              { value: "less than 1 year", label: "Less than 1 year" },
-              { value: "1-2", label: "1 to 2 years" },
-              { value: "2-3", label: "2 to 3 years" },
-              { value: "3-4", label: "3 to 4 years" },
-              { value: "4-5", label: "4 to 5 years" },
-              { value: "5+", label: "More than 5 years" },
-            ]}
-            {...form.getInputProps("useOfYears")}
-          />
-          <Select
-            label="Condition"
-            placeholder="Choose one"
-            required
-            data={[
-              { value: "used", label: "Used" },
-              { value: "new", label: "New" },
-            ]}
-            {...form.getInputProps("condition")}
-          />
+          <Flex gap="md" mt="sm">
+            <Select
+              label="Category"
+              placeholder="Pick one"
+              required
+              data={categories?.map((item) => ({
+                value: item._id,
+                label: item.name,
+              }))}
+              sx={{ width: "33%" }}
+              {...form.getInputProps("category")}
+            />
+            <Select
+              label="Use of Years"
+              placeholder="Choose one"
+              required
+              data={[
+                { value: "less than 1 year", label: "Less than 1 year" },
+                { value: "1-2", label: "1 to 2 years" },
+                { value: "2-3", label: "2 to 3 years" },
+                { value: "3-4", label: "3 to 4 years" },
+                { value: "4-5", label: "4 to 5 years" },
+                { value: "5+", label: "More than 5 years" },
+              ]}
+              sx={{ width: "33%" }}
+              {...form.getInputProps("useOfYears")}
+            />
+            <Select
+              label="Condition"
+              placeholder="Choose one"
+              required
+              data={[
+                { value: "used", label: "Used" },
+                { value: "new", label: "New" },
+              ]}
+              sx={{ width: "33%" }}
+              {...form.getInputProps("condition")}
+            />
+          </Flex>
           <Button fullWidth mt="xl" type="submit">
             Add Book
           </Button>

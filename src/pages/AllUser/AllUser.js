@@ -13,9 +13,9 @@ import { IconPencil, IconTrash } from "@tabler/icons";
 import { useEffect, useState } from "react";
 
 const jobColors = {
-  engineer: "blue",
-  manager: "cyan",
-  designer: "pink",
+  admin: "blue",
+  seller: "cyan",
+  buyer: "pink",
 };
 
 const data = [

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { createStyles, Navbar, Group, Code } from "@mantine/core";
+import { createStyles, Navbar, Group, Code, Avatar, Flex, Text } from "@mantine/core";
 import jwt_decode from "jwt-decode";
 import {
   IconBellRinging,
@@ -18,6 +18,7 @@ import {
 import { getTokenFromLocalStorage } from "../../utils/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import Logo from "../../assets/book-logo.png";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -175,7 +176,12 @@ const Sidebar = () => {
     <Navbar sx={{ height: "100%" }} p="md" className={classes.navbar}>
       <Navbar.Section grow>
         <Group className={classes.header} position="apart">
-          Book Valley
+          <Link to="/" className={classes.link}>
+            <Flex align="center" gap="xs">
+              <Avatar src={Logo}></Avatar>
+              <Text weight="bold">Book Valley</Text>
+            </Flex>
+          </Link>
           <Code className={classes.version}>v3.1.2</Code>
         </Group>
         {links}

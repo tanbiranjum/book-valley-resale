@@ -15,6 +15,7 @@ import {
   Avatar,
   Menu,
   Text,
+  Flex,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -31,6 +32,7 @@ import {
 } from "@tabler/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import Logo from "../../assets/book-logo.png";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -91,7 +93,12 @@ const Header = () => {
     <Box>
       <MantineHeader height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          Book Valley
+          <Link to="/" className={classes.link}>
+            <Flex align="center" gap="xs">
+              <Avatar src={Logo}></Avatar>
+              <Text weight="bold">Book Valley</Text>
+            </Flex>
+          </Link>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
