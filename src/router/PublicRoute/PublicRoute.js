@@ -16,6 +16,7 @@ import MyOrders from "../../pages/MyOrders/MyOrders";
 import Payment from "../../pages/Payment/Payment";
 import Register from "../../pages/Register/Register";
 import Wishlist from "../../pages/Wishlist/Wishlist";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/category/:categoryId",
-        element: <Category />,
+        element: (
+          <PrivateRoute>
+            <Category />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/blog",
