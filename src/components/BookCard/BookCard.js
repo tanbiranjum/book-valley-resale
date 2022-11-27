@@ -14,9 +14,10 @@ import {
   IconUsers,
   IconLocation,
 } from "@tabler/icons";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import CheckoutForm from "../CheckoutForm/CheckoutForm";
-import WisthButton from "../WishButton/WishButton";
+import WishButton from "../WishButton/WishButton";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -62,6 +63,7 @@ const useStyles = createStyles((theme) => ({
 const BookCard = ({ item }) => {
   const { classes } = useStyles();
   const [showCheckout, setShowCheckout] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const mockdata = [
     { label: item.author, icon: IconUsers },
@@ -97,7 +99,9 @@ const BookCard = ({ item }) => {
             <Text size="xs" color="dimmed">
               {item.description}
             </Text>
-            <WisthButton />
+            <WishButton
+              bookId={item._id}
+            />
           </div>
         </Group>
 
@@ -152,10 +156,13 @@ const BookCard = ({ item }) => {
           </Group>
         </Card.Section>
       </Card>
-      <CheckoutForm
-        showCheckout={showCheckout}
-        setShowCheckout={setShowCheckout}
-      />
+      {user?.email && (
+        <CheckoutForm
+          showCheckout={showCheckout}
+          setShowCheckout={setShowCheckout}
+          book={item}
+        />
+      )}
     </>
   );
 };

@@ -12,6 +12,9 @@ import {
   Drawer,
   Collapse,
   ScrollArea,
+  Avatar,
+  Menu,
+  Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -22,6 +25,9 @@ import {
   IconFingerprint,
   IconCoin,
   IconChevronDown,
+  IconMessage,
+  IconSettings,
+  IconLogout,
 } from "@tabler/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
@@ -115,9 +121,31 @@ const Header = () => {
               </Button>
             )}
             {user?.displayName && (
-              <Button variant="default" onClick={handleLogout}>
-                Log out
-              </Button>
+              <Menu width={260}>
+                <Menu.Target>
+                  <UnstyledButton
+                    sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <Avatar src={user.photoURL} radius="xl" size={30} />
+                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                      {user.displayName}
+                    </Text>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Great Day!</Menu.Label>
+                  <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
+                    Account settings
+                  </Menu.Item>
+                  <Menu.Item
+                    color="red"
+                    onClick={handleLogout}
+                    icon={<IconLogout size={14} stroke={1.5} />}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             )}
             {!user?.displayName && (
               <Button
