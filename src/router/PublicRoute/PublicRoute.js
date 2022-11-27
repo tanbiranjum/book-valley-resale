@@ -7,6 +7,7 @@ import AllUser from "../../pages/AllUser/AllUser";
 import Blog from "../../pages/Blog/Blog";
 import Category from "../../pages/Category/Category";
 import Dashboard from "../../pages/Dashboard/Dashboard";
+import ErrorPage from "../../pages/ErrorPage/ErrorPage";
 import Home from "../../pages/Home/Home";
 import Login from "../../pages/Login/Login";
 import MyBooks from "../../pages/MyBooks/MyBooks";
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
         element: <Payment />,
       },
     ],
+  },
+  {
+    path: "/*",
+    element: <ErrorPage />,
   },
 ]);
 

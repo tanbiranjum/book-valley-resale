@@ -15,10 +15,11 @@ import { useForm } from "@mantine/form";
 
 import { IconBrandGoogle, IconBrandGithub } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { setTokenInLocalStorage } from "../../utils/utils";
+import {} from 'firebase/auth'
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -66,6 +67,7 @@ const Login = () => {
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
+    setVisible(true);
     login(data.email, data.password)
       .then((userCredential) => {
         setError("");
@@ -78,6 +80,7 @@ const Login = () => {
       })
       .catch((error) => {
         setError(handleError(error.code));
+        setVisible(false);
       });
   };
 
@@ -101,23 +104,13 @@ const Login = () => {
           if (data.data.user) {
             getTokenAndNavigate({ email, role: data.data.user.role });
             return;
+          } else {
+            setError("There is no user with this email");
           }
           registerUser({ displayName, photoURL, email }).then((data) => {
             getTokenAndNavigate({ email, role: data.data.user.role });
           });
         });
-      })
-      .catch((error) => {
-        setError(handleError(error.code));
-      });
-  };
-
-  const handleGithubLogin = () => {
-    githubLogin()
-      .then((userCredential) => {
-        setError("");
-        const email = userCredential.user.email;
-        // getTokenAndNavigate(uid);
       })
       .catch((error) => {
         setError(handleError(error.code));
@@ -135,8 +128,12 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setVisible(false);
         setTokenInLocalStorage(data.token);
         navigate("/");
+      })
+      .catch((error) => {
+        setVisible(false);
       });
   };
 
@@ -180,10 +177,10 @@ const Login = () => {
           >
             Google
           </Button>
-          <Button radius="xs" variant="light" leftIcon={<IconBrandGithub />}>
-            Github
-          </Button>
         </Group>
+        <Text color="red" weight="bold">
+          {error}
+        </Text>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
             label="Email address"
@@ -212,13 +209,15 @@ const Login = () => {
 
         <Text align="center" mt="md">
           Don&apos;t have an account?{" "}
-          <Anchor
-            href="#"
+          <Link
+            style={{
+              textDecoration: "none",
+            }}
+            to="/register"
             weight={700}
-            onClick={(event) => event.preventDefault()}
           >
             Register
-          </Anchor>
+          </Link>
         </Text>
       </Paper>
     </div>

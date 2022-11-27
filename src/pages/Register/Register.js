@@ -17,7 +17,7 @@ import { useForm } from "@mantine/form";
 
 import { IconBrandGoogle, IconBrandGithub, IconUpload } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { setTokenInLocalStorage } from "../../utils/utils";
@@ -64,6 +64,7 @@ const Register = () => {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isSeller, setIsSeller] = useState(false);
 
   const { user, register, updateUserProfile, googleLogin, githubLogin } =
     useContext(AuthContext);
@@ -100,7 +101,10 @@ const Register = () => {
               email: formValue.email,
               role: formValue.seller ? "seller" : "buyer",
             }).then((data) => {
-              getTokenAndNavigate({ email, role: data.data.user.role });
+              getTokenAndNavigate({
+                email: formValue.email,
+                role: data.data.user.role,
+              });
             });
           })
           .catch((error) => {
@@ -133,7 +137,12 @@ const Register = () => {
             getTokenAndNavigate({ email, role: data.data.user.role });
             return;
           }
-          registerUser({ displayName, photoURL, email }).then((data) => {
+          registerUser({
+            displayName,
+            photoURL,
+            email,
+            role: form.values.seller ? "seller" : "buyer",
+          }).then((data) => {
             getTokenAndNavigate({ email, role: data.data.user.role });
           });
         });
@@ -143,31 +152,21 @@ const Register = () => {
       });
   };
 
-  const handleGithubLogin = () => {
-    githubLogin()
-      .then((userCredential) => {
-        setError("");
-        const email = userCredential.user.email;
-        // getTokenAndNavigate(uid);
-      })
-      .catch((error) => {
-        setError(handleError(error.code));
-      });
-  };
-
   // Get token from server and navigate to home page
   const getTokenAndNavigate = (data) => {
+    console.log(data);
     fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        data,
       },
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((data) => {
         setTokenInLocalStorage(data.token);
         navigate("/");
+        return window.location.reload();
       });
   };
 
@@ -212,9 +211,6 @@ const Register = () => {
             onClick={handleGoogleLogin}
           >
             Google
-          </Button>
-          <Button radius="xs" variant="light" leftIcon={<IconBrandGithub />}>
-            Github
           </Button>
         </Group>
         <form onSubmit={form.onSubmit(onSubmit)}>
@@ -263,19 +259,21 @@ const Register = () => {
             type="submit"
             // onClick={() => setVisible((v) => !v)}
           >
-            Login
+            Register
           </Button>
         </form>
 
         <Text align="center" mt="md">
           Don&apos;t have an account?{" "}
-          <Anchor
-            href="#"
+          <Link
+            style={{
+              textDecoration: "none",
+            }}
+            to="/login"
             weight={700}
-            onClick={(event) => event.preventDefault()}
           >
-            Register
-          </Anchor>
+            Login
+          </Link>
         </Text>
       </Paper>
     </div>

@@ -7,7 +7,6 @@ export const getUserByEmail = async (email) => {
 };
 
 export const registerUser = async (userData) => {
-  console.log("Hello");
   const result = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
     method: "POST",
     headers: {
