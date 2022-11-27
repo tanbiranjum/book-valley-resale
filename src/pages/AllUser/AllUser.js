@@ -13,6 +13,7 @@ import { IconPencil, IconTrash } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import DeleteUserDialogue from "../../components/Dialogue/DeleteUserDialogue/DeleteUserDialogue";
+import useFetchUsers from "../../hooks/UseAllUser/useFetchUsers";
 
 const jobColors = {
   admin: "blue",
@@ -24,14 +25,7 @@ const AllUser = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
 
-  const { data: users, isLoading } = useQuery(["allUsers"], () => {
-    return fetch(`${process.env.REACT_APP_API_URL}/users`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        return data.data.users;
-      });
-  });
+  const [users, isLoading] = useFetchUsers();
 
   const rows = users?.map((item) => (
     <tr key={item.name}>
@@ -82,7 +76,6 @@ const AllUser = () => {
 
   return (
     <ScrollArea>
-      {console.log(users)}
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>
           <tr>
