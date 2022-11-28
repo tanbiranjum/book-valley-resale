@@ -10,14 +10,6 @@ import {
   Badge,
   Button,
 } from "@mantine/core";
-import {
-  IconPencil,
-  IconMessages,
-  IconNote,
-  IconMicrophone,
-  IconTrash,
-  IconDots,
-} from "@tabler/icons";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -63,15 +55,17 @@ const Rows = ({ item }) => {
         </Text>
       </td>
       <td>
-        <Group spacing={0} position="right">
-          <Button
-            onClick={() => {
-              navigate(`/dashboard/payment/${item._id}`);
-            }}
-          >
-            Pay Now
-          </Button>
-        </Group>
+        {!item.status === "accepted" && (
+          <Group spacing={0} position="right">
+            <Button
+              onClick={() => {
+                navigate(`/dashboard/payment/${item._id}`);
+              }}
+            >
+              Pay Now
+            </Button>
+          </Group>
+        )}
       </td>
     </tr>
   );
@@ -91,6 +85,11 @@ const MyOrders = () => {
     <ScrollArea sx={{ height: "100%" }} type="never">
       <Table sx={{ minWidth: 800 }} verticalSpacing="md">
         <tbody>{rows}</tbody>
+        {books?.length === 0 && (
+          <Text size="xl" weight="bold">
+            No Books in Order
+          </Text>
+        )}
       </Table>
     </ScrollArea>
   );

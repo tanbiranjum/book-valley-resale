@@ -20,6 +20,8 @@ import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import CheckoutForm from "../CheckoutForm/CheckoutForm";
 import WishButton from "../WishButton/WishButton";
 import formatDistance from "date-fns/formatDistance";
+import { useNavigate } from "react-router-dom";
+import useRole from "../../hooks/UseRole/useRole";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -66,12 +68,26 @@ const BookCard = ({ item }) => {
   const { classes } = useStyles();
   const [showCheckout, setShowCheckout] = useState(false);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [role] = useRole();
 
   const mockdata = [
     { label: item.author, icon: IconUsers },
     { label: item.useOfYears, icon: IconGauge },
     { label: item.location, icon: IconLocation },
   ];
+
+  const handleCheckout = () => {
+    if (user) {
+      if (role === "seller" || role === "admin") {
+        alert("You are not allowed to buy your own book");
+        return;
+      }
+      setShowCheckout(true);
+    } else {
+      navigate("/login");
+    }
+  };
 
   const features = mockdata.map((feature) => (
     <Center key={feature.label}>
@@ -101,7 +117,7 @@ const BookCard = ({ item }) => {
             <Text size="xs" color="dimmed">
               {item.description}
             </Text>
-            <WishButton bookId={item._id} />
+            {user && role === "buyer" && <WishButton bookId={item._id} />}
           </div>
         </Group>
 
@@ -162,12 +178,7 @@ const BookCard = ({ item }) => {
                 Resell Price
               </Text>
             </div>
-
-            <Button
-              radius="xl"
-              style={{ flex: 1 }}
-              onClick={() => setShowCheckout(true)}
-            >
+            <Button radius="xl" style={{ flex: 1 }} onClick={handleCheckout}>
               Book now
             </Button>
           </Group>

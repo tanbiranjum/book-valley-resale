@@ -5,6 +5,8 @@ import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCircleCheck } from "@tabler/icons";
+import API from "../../api/api";
+import { getTokenFromLocalStorage } from "../../utils/utils";
 
 const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
   const { user } = useContext(AuthContext);
@@ -18,24 +20,16 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
 
     const order = { seller, buyer, bookId, buyerNumber, buyerAddress };
 
-    fetch(`${process.env.REACT_APP_API_URL}/carts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(order),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          showNotification({
-            title: "Order placed",
-            message: "Your order has been placed successfully",
-            color: "green",
-            icon: <IconCircleCheck />,
-          });
-          setShowCheckout(false);
-        }
+    API(getTokenFromLocalStorage())
+      .post("/carts", order)
+      .then((res) => {
+        showNotification({
+          title: "Order placed",
+          message: "Your order has been placed successfully",
+          color: "green",
+          icon: <IconCircleCheck />,
+        });
+        setShowCheckout(false);
       })
       .catch((err) => {
         showNotification({

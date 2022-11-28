@@ -40,6 +40,11 @@ const MyBooks = () => {
     <ScrollArea sx={{ height: "100%" }} type="never">
       <Table sx={{ minWidth: 800 }} verticalSpacing="md">
         <tbody>{rows}</tbody>
+        {books?.length === 0 && (
+          <Text size="xl" weight="bold">
+            No Books You have added
+          </Text>
+        )}
       </Table>
     </ScrollArea>
   );

@@ -7,6 +7,7 @@ import {
   Anchor,
   Group,
   Container,
+  ThemeIcon,
 } from "@mantine/core";
 import {
   IconCreditCard,
@@ -15,6 +16,7 @@ import {
   IconReceiptRefund,
   IconReceipt,
   IconReceiptTax,
+  IconCategory,
 } from "@tabler/icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -80,8 +82,14 @@ const CategorySection = () => {
   const items = categories.map((item) => (
     <UnstyledButton key={item._id} className={classes.item}>
       <Link to={`/category/${item._id}`} className={classes.link}>
-        <IconCreditCard color={theme.colors.blue[6]} size="32px" />
-        <Text size="xs" mt={7}>
+        <ThemeIcon
+          size="lg"
+          variant="gradient"
+          gradient={{ from: "teal", to: "blue", deg: 60 }}
+        >
+          <IconCategory color={theme.colors.gray[1]} size="20px" />
+        </ThemeIcon>
+        <Text size="sm" weight="500" mt={7}>
           {item.name}
         </Text>
       </Link>
@@ -89,7 +97,7 @@ const CategorySection = () => {
   ));
 
   return (
-    <Container size="xl">
+    <Container size="xl" mt="md">
       <Card withBorder radius="md" className={classes.card}>
         <Group position="apart">
           <Text size="lg" className={classes.title}>

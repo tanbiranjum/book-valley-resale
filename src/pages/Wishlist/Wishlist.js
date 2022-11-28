@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Table,
@@ -22,9 +22,12 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import formatDistance from "date-fns/formatDistance";
+import CheckoutForm from "../../components/CheckoutForm/CheckoutForm";
 
 const Rows = ({ item }) => {
   const queryClient = useQueryClient();
+  const [showCheckout, setShowCheckout] = useState(false);
+
   const handleDeleteFromWishlist = () => {
     return fetch(
       `${process.env.REACT_APP_API_URL}/wishlists/${item.bookId._id}`,
@@ -92,6 +95,17 @@ const Rows = ({ item }) => {
           <IconTrash color="red" />
         </ActionIcon>
       </td>
+      <td>
+        {console.log(item)}
+        {!item.bookId.isAdvertise && (
+          <Button onClick={() => setShowCheckout(true)}>Pay</Button>
+        )}
+      </td>
+      <CheckoutForm
+        showCheckout={showCheckout}
+        setShowCheckout={setShowCheckout}
+        book={item.bookId}
+      />
     </tr>
   );
 };
@@ -112,6 +126,11 @@ const Wishlist = () => {
     <ScrollArea sx={{ height: "100%" }} type="never">
       {console.log(wishlists)}
       <Table sx={{ minWidth: 800 }} verticalSpacing="md">
+        {wishlists?.length === 0 && (
+          <Text size="xl" weight="bold">
+            No Books in Wishlist
+          </Text>
+        )}
         <tbody>{rows}</tbody>
       </Table>
     </ScrollArea>

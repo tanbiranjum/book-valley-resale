@@ -2,8 +2,13 @@ import jwt_decode from "jwt-decode";
 import { getTokenFromLocalStorage } from "../../utils/utils";
 
 const useRole = () => {
-  let { role, email } = jwt_decode(getTokenFromLocalStorage());
-  return [role, email];
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    const role = "guest";
+    return [role];
+  }
+  let { role } = jwt_decode(token);
+  return [role];
 };
 
 export default useRole;

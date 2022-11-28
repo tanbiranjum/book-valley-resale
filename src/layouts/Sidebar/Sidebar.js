@@ -190,7 +190,7 @@ const Sidebar = () => {
               <Text weight="bold">Book Valley</Text>
             </Flex>
           </Link>
-          <Code className={classes.version}>v3.1.2</Code>
+          <Code className={classes.version}>Hey! Good Day</Code>
         </Group>
         {links}
       </Navbar.Section>

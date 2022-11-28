@@ -22,6 +22,7 @@ import BookCard from "../../components/BookCard/BookCard";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import useCategory from "../../hooks/UseCategory/useCategory";
+import SkeletonLoader from "../../components/Skeleton/Skeleton";
 
 const data = [
   { icon: IconGauge, label: "Dashboard", description: "Item with description" },
@@ -106,9 +107,15 @@ const Category = () => {
           </Box>
         </Grid.Col>
         <Grid.Col xs={9}>
+          {isLoading && <SkeletonLoader />}
+          {data?.length === 0 && (
+            <Text size="xl" weight="bold">
+              No Books in this category
+            </Text>
+          )}
           <Grid gutter="md">
             {data?.map((item) => (
-              <Grid.Col xs={4}>
+              <Grid.Col xs={4} key={item._id}>
                 <BookCard item={item} key={item._id} />
               </Grid.Col>
             ))}

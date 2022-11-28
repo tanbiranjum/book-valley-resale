@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import CheckoutForm from "../CheckoutForm/CheckoutForm";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import API from "../../api/api";
+import { getTokenFromLocalStorage } from "../../utils/utils";
 
 const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PK}`);
 
@@ -11,11 +13,9 @@ const Payment = () => {
   const { cartId } = useParams();
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/carts/${cartId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCart(data.data.cart);
-      });
+    API(getTokenFromLocalStorage())
+      .get(`/carts/${cartId}`)
+      .then((res) => setCart(res.data.data.cart));
   }, []);
   return (
     <Elements stripe={stripePromise}>

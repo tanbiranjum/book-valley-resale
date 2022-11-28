@@ -7,6 +7,7 @@ import AllUser from "../../pages/AllUser/AllUser";
 import Blog from "../../pages/Blog/Blog";
 import Category from "../../pages/Category/Category";
 import Dashboard from "../../pages/Dashboard/Dashboard";
+import DashboardHome from "../../pages/Dashboard/DashboardHome/DashboardHome";
 import ErrorPage from "../../pages/ErrorPage/ErrorPage";
 import Home from "../../pages/Home/Home";
 import Login from "../../pages/Login/Login";
@@ -55,6 +56,14 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     children: [
+      {
+        path: "/dashboard",
+        element: (
+          <PrivateRoute>
+            <DashboardHome />
+          </PrivateRoute>
+        ),
+      },
       {
         path: "/dashboard/all-users",
         element: (

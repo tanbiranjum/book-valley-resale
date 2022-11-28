@@ -74,6 +74,7 @@ const Register = () => {
 
   // If user is logged in, sign a token and navigate to home page
   const onSubmit = (data) => {
+    setVisible(true);
     const formValue = data;
     const formData = new FormData();
     formData.append("image", uploadImage);
@@ -115,10 +116,12 @@ const Register = () => {
             });
           })
           .catch((error) => {
+            setVisible(false);
             setError(handleError(error.code));
           });
       })
       .catch((err) => {
+        setVisible(false);
         console.log(err);
       });
   };
@@ -135,6 +138,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
+    setVisible(true);
     googleLogin()
       .then((userCredential) => {
         setError("");
@@ -157,6 +161,7 @@ const Register = () => {
         });
       })
       .catch((error) => {
+        setVisible(false);
         setError(handleError(error.code));
       });
   };
@@ -173,6 +178,7 @@ const Register = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setVisible(false);
         setUserIdInLocalStorage(userId);
         setTokenInLocalStorage(data.token);
         navigate("/");

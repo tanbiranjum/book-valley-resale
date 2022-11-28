@@ -91,14 +91,14 @@ const Header = () => {
 
   return (
     <Box>
-      <MantineHeader height={60} px="md">
+      <MantineHeader height={60}>
         <Group position="apart" sx={{ height: "100%" }}>
-          <Link to="/" className={classes.link}>
-            <Flex align="center" gap="xs">
-              <Avatar src={Logo}></Avatar>
+          <Flex>
+            <Link to="/" className={classes.link} style={{ padding: 0 }}>
+              <Avatar src={Logo} mr="sm"></Avatar>
               <Text weight="bold">Book Valley</Text>
-            </Flex>
-          </Link>
+            </Link>
+          </Flex>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
@@ -128,7 +128,7 @@ const Header = () => {
               </Button>
             )}
             {user?.displayName && (
-              <Menu width={260}>
+              <Menu width={260} position="bottom-start">
                 <Menu.Target>
                   <UnstyledButton
                     sx={{ display: "flex", alignItems: "center", gap: "8px" }}
@@ -165,6 +165,7 @@ const Header = () => {
             )}
           </Group>
           <Burger
+            ml="auto"
             opened={drawerOpened}
             onClick={toggleDrawer}
             className={classes.hiddenDesktop}
@@ -211,21 +212,52 @@ const Header = () => {
           />
 
           <Group position="center" grow pb="xl" px="md">
-            <Button
-              variant="default"
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Log in
-            </Button>
-            <Button
-              onClick={() => {
-                navigate("/register");
-              }}
-            >
-              Register
-            </Button>
+            {!user?.displayName && (
+              <Button
+                variant="default"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Log in
+              </Button>
+            )}
+            {user?.displayName && (
+              <Menu width={260} position="bottom-start">
+                <Menu.Target>
+                  <UnstyledButton
+                    sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <Avatar src={user.photoURL} radius="xl" size={30} />
+                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                      {user.displayName}
+                    </Text>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Great Day!</Menu.Label>
+                  <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
+                    Account settings
+                  </Menu.Item>
+                  <Menu.Item
+                    color="red"
+                    onClick={handleLogout}
+                    icon={<IconLogout size={14} stroke={1.5} />}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            )}
+            {!user?.displayName && (
+              <Button
+                onClick={() => {
+                  navigate("/register");
+                }}
+              >
+                Register
+              </Button>
+            )}
           </Group>
         </ScrollArea>
       </Drawer>
