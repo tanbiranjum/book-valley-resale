@@ -4,7 +4,11 @@ Buy and Sell Old Books Online
 
 ## Live Link
 
-- [Book Valley](https://book-valley-server-tanbiranjum.vercel.app/)
+- [Book Valley](https://book-valley.web.app/)
+
+adminEmail: botaja3499@teknowa.com
+
+adminPassword: 123456
 
 ## Features
 
