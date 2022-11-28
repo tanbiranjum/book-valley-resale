@@ -235,12 +235,14 @@ const Register = () => {
             placeholder="John Doe"
             size="md"
             mb="md"
+            required
             {...form.getInputProps("displayName")}
           />
           <TextInput
             label="Email address"
             placeholder="hello@gmail.com"
             size="md"
+            required
             {...form.getInputProps("email")}
           />
           <PasswordInput
@@ -248,6 +250,7 @@ const Register = () => {
             placeholder="Your password"
             mt="md"
             size="md"
+            required
             {...form.getInputProps("password")}
           />
           <FileInput
@@ -256,6 +259,7 @@ const Register = () => {
             icon={<IconUpload size={14} />}
             mt="md"
             size="md"
+            required
             onChange={(image) => {
               setUploadImage(image);
             }}
