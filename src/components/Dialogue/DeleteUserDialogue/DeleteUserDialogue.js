@@ -10,6 +10,8 @@ import {
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { IconCircleCheck } from "@tabler/icons";
 import { showNotification } from "@mantine/notifications";
+import API from "../../../api/api";
+import { getTokenFromLocalStorage } from "../../../utils/utils";
 
 const DeleteUserDialogue = ({ opened, setOpened, userId }) => {
   const queryClient = useQueryClient();
@@ -17,13 +19,7 @@ const DeleteUserDialogue = ({ opened, setOpened, userId }) => {
 
   const handleDelete = (id) => {
     setVisible(true);
-    return fetch(`${process.env.REACT_APP_API_URL}/users/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        return data;
-      });
+    return API(getTokenFromLocalStorage()).delete(`/users/${id}`);
   };
 
   const deleteUser = useMutation(handleDelete, {
