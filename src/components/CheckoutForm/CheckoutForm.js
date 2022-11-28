@@ -96,6 +96,7 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
           placeholder="Enter your meet location"
           size="md"
           mb="sm"
+          required
           {...form.getInputProps("meetLocation")}
         />
         <TextInput
@@ -103,6 +104,7 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
           placeholder="Enter your phone number"
           size="md"
           mb="sm"
+          required
           {...form.getInputProps("phoneNumber")}
         />
         <Button type="submit">Book Order</Button>
