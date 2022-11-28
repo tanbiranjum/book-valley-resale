@@ -21,6 +21,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import formatDistance from "date-fns/formatDistance";
 import { showNotification } from "@mantine/notifications";
+import API from "../../api/api";
 
 const ProductRow = ({ item }) => {
   const queryClient = useQueryClient();
@@ -55,13 +56,7 @@ const ProductRow = ({ item }) => {
   });
 
   const handleDelete = (id) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/books/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        return data;
-      });
+    return API().delete(`/books/${id}`);
   };
 
   const deleteBook = useMutation(handleDelete, {
@@ -84,7 +79,7 @@ const ProductRow = ({ item }) => {
       <td>
         <Group spacing="sm">
           <div>
-            <Image src={item.photo} width="50px"/>
+            <Image src={item.photo} width="50px" />
             <Text size="sm" weight={500}>
               {item.title}
             </Text>
