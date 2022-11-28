@@ -98,7 +98,7 @@ const Rows = ({ item }) => {
       </td>
       <td>
         {console.log(item)}
-        {!item.bookId.isAdvertise && (
+        {item.bookId.isAdvertise && (
           <Button onClick={() => setShowCheckout(true)}>Pay</Button>
         )}
       </td>

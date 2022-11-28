@@ -87,6 +87,7 @@ const MyOrders = () => {
       <Table sx={{ minWidth: 800 }} verticalSpacing="md">
         {isLoading && <Loader />}
         <tbody>{rows}</tbody>
+        {console.log(books)}
         {books?.length === 0 && (
           <Text size="xl" weight="bold">
             No Books in Order
