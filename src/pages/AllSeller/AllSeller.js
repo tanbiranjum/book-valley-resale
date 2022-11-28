@@ -24,6 +24,7 @@ import useFetchUsers from "../../hooks/UseAllUser/useFetchUsers";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { showNotification } from "@mantine/notifications";
 import API from "../../api/api";
+import { getTokenFromLocalStorage } from "../../utils/utils";
 
 const jobColors = {
   admin: "blue",
@@ -35,7 +36,7 @@ const MenuBar = ({ user }) => {
   const queryClient = useQueryClient();
 
   const makeSellerVerified = () => {
-    return API.patch(`/users/${user._id}`, {
+    return API(getTokenFromLocalStorage()).patch(`/users/${user._id}`, {
       isVerified: true,
     });
   };
