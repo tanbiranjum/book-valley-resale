@@ -13,6 +13,7 @@ import {
   IconManualGearbox,
   IconUsers,
   IconLocation,
+  IconCircleCheck,
 } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
@@ -118,8 +119,15 @@ const BookCard = ({ item }) => {
           </Badge>
           <br />
           <Text mt="sm" size="sm" weight="400">
-            <Text color="cyan" weight="500">
-              {item.sellerName}
+            <Text
+              color="cyan"
+              weight="500"
+              sx={{ display: "flex", alignItems: "center", gap: "4px" }}
+            >
+              {item.seller.displayName}{" "}
+              {item.seller.isVerified && (
+                <IconCircleCheck color="blue" size="18" />
+              )}
             </Text>
             {` Posted ${formatDistance(
               new Date(item.createdAt),
@@ -130,7 +138,7 @@ const BookCard = ({ item }) => {
 
         <Card.Section className={classes.section} mt="md">
           <Text size="sm" color="dimmed" className={classes.label}>
-            Non-Fiction
+            {item.category.name}
           </Text>
 
           <Group spacing={8} mb={-8}>

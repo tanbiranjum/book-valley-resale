@@ -20,11 +20,16 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import ProductRow from "../../components/ProductRow/ProductRow";
+import { getUserIdFromLocalStorage } from "../../utils/utils";
 
 const MyBooks = () => {
   const { user } = useContext(AuthContext);
   const { data: books, isLoading } = useQuery(["myBooks"], () => {
-    return fetch(`${process.env.REACT_APP_API_URL}/books/seller/${user.email}`)
+    return fetch(
+      `${
+        process.env.REACT_APP_API_URL
+      }/books/seller/${getUserIdFromLocalStorage()}`
+    )
       .then((res) => res.json())
       .then((data) => data.data.books);
   });

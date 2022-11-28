@@ -20,7 +20,10 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
-import { setTokenInLocalStorage } from "../../utils/utils";
+import {
+  setTokenInLocalStorage,
+  setUserIdInLocalStorage,
+} from "../../utils/utils";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -101,10 +104,14 @@ const Register = () => {
               email: formValue.email,
               role: formValue.seller ? "seller" : "buyer",
             }).then((data) => {
-              getTokenAndNavigate({
-                email: formValue.email,
-                role: data.data.user.role,
-              });
+              const userId = data.data.user._id;
+              getTokenAndNavigate(
+                {
+                  email: formValue.email,
+                  role: data.data.user.role,
+                },
+                userId
+              );
             });
           })
           .catch((error) => {
@@ -133,17 +140,19 @@ const Register = () => {
         setError("");
         const { email, displayName, photoURL } = userCredential.user;
         getUserByEmail(email).then((data) => {
+          let userId;
           if (data.data.user) {
-            getTokenAndNavigate({ email, role: data.data.user.role });
+            userId = data.data.user._id;
+            getTokenAndNavigate({ email, role: data.data.user.role }, userId);
             return;
           }
           registerUser({
             displayName,
             photoURL,
             email,
-            role: form.values.seller ? "seller" : "buyer",
           }).then((data) => {
-            getTokenAndNavigate({ email, role: data.data.user.role });
+            userId = data.data.user._id;
+            getTokenAndNavigate({ email, role: data.data.user.role }, userId);
           });
         });
       })
@@ -153,7 +162,7 @@ const Register = () => {
   };
 
   // Get token from server and navigate to home page
-  const getTokenAndNavigate = (data) => {
+  const getTokenAndNavigate = (data, userId) => {
     console.log(data);
     fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
@@ -164,6 +173,7 @@ const Register = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setUserIdInLocalStorage(userId);
         setTokenInLocalStorage(data.token);
         navigate("/");
         return window.location.reload();

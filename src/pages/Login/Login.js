@@ -18,8 +18,11 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserByEmail, registerUser } from "../../auth/auth";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
-import { setTokenInLocalStorage } from "../../utils/utils";
-import {} from 'firebase/auth'
+import {
+  setTokenInLocalStorage,
+  setUserIdInLocalStorage,
+} from "../../utils/utils";
+import {} from "firebase/auth";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -72,10 +75,14 @@ const Login = () => {
       .then((userCredential) => {
         setError("");
         getUserByEmail(data.email).then((data) => {
-          getTokenAndNavigate({
-            email: data.data.user.email,
-            role: data.data.user.role,
-          });
+          const userId = data.data.user._id;
+          getTokenAndNavigate(
+            {
+              email: data.data.user.email,
+              role: data.data.user.role,
+            },
+            userId
+          );
         });
       })
       .catch((error) => {
@@ -101,14 +108,17 @@ const Login = () => {
         setError("");
         const { email, photoURL, displayName } = userCredential.user;
         getUserByEmail(email).then((data) => {
+          let userId;
           if (data.data.user) {
-            getTokenAndNavigate({ email, role: data.data.user.role });
+            userId = data.data.user._id;
+            getTokenAndNavigate({ email, role: data.data.user.role }, userId);
             return;
           } else {
             setError("There is no user with this email");
           }
           registerUser({ displayName, photoURL, email }).then((data) => {
-            getTokenAndNavigate({ email, role: data.data.user.role });
+            userId = data.data.user._id;
+            getTokenAndNavigate({ email, role: data.data.user.role }, userId);
           });
         });
       })
@@ -118,7 +128,7 @@ const Login = () => {
   };
 
   // Get token from server and navigate to home page
-  const getTokenAndNavigate = (data) => {
+  const getTokenAndNavigate = (data, userId) => {
     fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
       headers: {
@@ -129,6 +139,7 @@ const Login = () => {
       .then((res) => res.json())
       .then((data) => {
         setVisible(false);
+        setUserIdInLocalStorage(userId);
         setTokenInLocalStorage(data.token);
         navigate("/");
       })

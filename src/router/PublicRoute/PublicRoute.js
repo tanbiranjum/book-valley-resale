@@ -16,7 +16,9 @@ import MyOrders from "../../pages/MyOrders/MyOrders";
 import Payment from "../../pages/Payment/Payment";
 import Register from "../../pages/Register/Register";
 import Wishlist from "../../pages/Wishlist/Wishlist";
+import AdminRoute from "../AdminRoute/AdminRoute";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import SellerRoute from "../SellerRoute.js/SellerRoute";
 
 const router = createBrowserRouter([
   {
@@ -55,39 +57,75 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard/all-users",
-        element: <AllUser />,
+        element: (
+          <AdminRoute>
+            <AllUser />
+          </AdminRoute>
+        ),
       },
       {
         path: "/dashboard/all-sellers",
-        element: <AllSeller />,
+        element: (
+          <AdminRoute>
+            <AllSeller />
+          </AdminRoute>
+        ),
       },
       {
         path: "/dashboard/all-buyers",
-        element: <AllBuyer />,
+        element: (
+          <AdminRoute>
+            <AllBuyer />
+          </AdminRoute>
+        ),
       },
       {
         path: "/dashboard/my-orders",
-        element: <MyOrders />,
+        element: (
+          <PrivateRoute>
+            <MyOrders />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/wishlist",
-        element: <Wishlist />,
+        element: (
+          <PrivateRoute>
+            <Wishlist />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/add-book",
-        element: <AddBook />,
+        element: (
+          <SellerRoute>
+            <AddBook />
+          </SellerRoute>
+        ),
       },
       {
         path: "/dashboard/my-books",
-        element: <MyBooks />,
+        element: (
+          <SellerRoute>
+            <MyBooks />
+          </SellerRoute>
+        ),
       },
       {
         path: "/dashboard/my-buyers",
-        element: <MyBuyers />,
+        element: (
+          <SellerRoute>
+            <MyBuyers />
+          </SellerRoute>
+        ),
       },
       {
         path: "/dashboard/payment/:cartId",
-        element: <Payment />,
+        element: (
+          <PrivateRoute>
+            <Payment />
+          </PrivateRoute>
+        ),
       },
     ],
   },

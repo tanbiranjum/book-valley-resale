@@ -1,6 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { createStyles, Navbar, Group, Code, Avatar, Flex, Text } from "@mantine/core";
-import jwt_decode from "jwt-decode";
+import {
+  createStyles,
+  Navbar,
+  Group,
+  Code,
+  Avatar,
+  Flex,
+  Text,
+} from "@mantine/core";
 import {
   IconBellRinging,
   IconFingerprint,
@@ -19,6 +26,7 @@ import { getTokenFromLocalStorage } from "../../utils/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import Logo from "../../assets/book-logo.png";
+import useRole from "../../hooks/UseRole/useRole";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -138,6 +146,7 @@ const Sidebar = () => {
   const [active, setActive] = useState("Billing");
   const [data, setData] = useState([]);
   const { logout } = useContext(AuthContext);
+  const [role] = useRole();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -146,12 +155,11 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    let decoded = jwt_decode(getTokenFromLocalStorage());
-    if (decoded.role === "buyer") {
+    if (role === "buyer") {
       setData(buyer);
-    } else if (decoded.role === "admin") {
+    } else if (role === "admin") {
       setData(admin);
-    } else if (decoded.role === "seller") {
+    } else if (role === "seller") {
       setData(seller);
     }
   }, []);

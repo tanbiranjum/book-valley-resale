@@ -19,12 +19,15 @@ import { useForm } from "@mantine/form";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { showNotification } from "@mantine/notifications";
 import { IconCircleCheck, IconCross } from "@tabler/icons";
+import { getUserIdFromLocalStorage } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 const AddBook = () => {
   const [categories, setCategories] = useState([]);
   const [uploadImage, setUploadImage] = useState();
   const [visible, setVisible] = useState(false);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
@@ -57,7 +60,7 @@ const AddBook = () => {
       .then((data) => {
         const photo = data.data.display_url;
         formValue.photo = photo;
-        formValue.seller = user.email;
+        formValue.seller = getUserIdFromLocalStorage();
         handleSaveBook(formValue);
         form.reset();
       });
@@ -80,6 +83,7 @@ const AddBook = () => {
           icon: <IconCircleCheck />,
         });
         setVisible(false);
+        navigate("/dashboard/my-books");
       })
       .catch((err) => {
         showNotification({

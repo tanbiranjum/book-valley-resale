@@ -52,6 +52,32 @@ const ProductRow = ({ item }) => {
       });
     },
   });
+
+  const handleDelete = (id) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/books/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+  };
+
+  const deleteBook = useMutation(handleDelete, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["myBooks"],
+      });
+
+      showNotification({
+        title: "Success",
+        message: "Book deleted successfully",
+        color: "green",
+        icon: <IconCircleCheck />,
+      });
+    },
+  });
+
   return (
     <tr key={item._id}>
       <td>
@@ -111,6 +137,7 @@ const ProductRow = ({ item }) => {
               <Menu.Item
                 icon={<IconTrash size={16} stroke={1.5} />}
                 color="red"
+                onClick={() => deleteBook.mutate(item._id)}
               >
                 Delete
               </Menu.Item>

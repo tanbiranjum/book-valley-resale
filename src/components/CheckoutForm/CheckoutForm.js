@@ -3,6 +3,8 @@ import React, { useContext } from "react";
 import { Button, Modal, TextInput } from "@mantine/core";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { IconCircleCheck } from "@tabler/icons";
 
 const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
   const { user } = useContext(AuthContext);
@@ -26,9 +28,22 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          console.log(data.data.cart);
+          showNotification({
+            title: "Order placed",
+            message: "Your order has been placed successfully",
+            color: "green",
+            icon: <IconCircleCheck />,
+          });
           setShowCheckout(false);
         }
+      })
+      .catch((err) => {
+        showNotification({
+          title: "Oops!",
+          message: "Something went wrong",
+          color: "red",
+        });
+        setShowCheckout(false);
       });
   };
 
