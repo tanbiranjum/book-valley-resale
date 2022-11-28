@@ -10,6 +10,7 @@ import {
   ScrollArea,
   useMantineTheme,
   Menu,
+  Loader,
 } from "@mantine/core";
 import {
   IconCircleCheck,
@@ -138,6 +139,7 @@ const AllSeller = () => {
   return (
     <ScrollArea sx={{ height: "100%" }}>
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+        {isLoading && <Loader />}
         <thead>
           <tr>
             <th>Name</th>

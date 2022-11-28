@@ -9,6 +9,7 @@ import {
   ScrollArea,
   Badge,
   Button,
+  Loader,
 } from "@mantine/core";
 import {
   IconPencil,
@@ -124,7 +125,7 @@ const Wishlist = () => {
 
   return (
     <ScrollArea sx={{ height: "100%" }} type="never">
-      {console.log(wishlists)}
+      {isLoading && <Loader />}
       <Table sx={{ minWidth: 800 }} verticalSpacing="md">
         {wishlists?.length === 0 && (
           <Text size="xl" weight="bold">

@@ -8,6 +8,7 @@ import {
   Anchor,
   ScrollArea,
   useMantineTheme,
+  Loader,
 } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
@@ -77,6 +78,7 @@ const AllUser = () => {
   return (
     <ScrollArea>
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+        {isLoading && <Loader />}
         <thead>
           <tr>
             <th>Name</th>

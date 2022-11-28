@@ -7,6 +7,7 @@ import {
   Menu,
   ScrollArea,
   Badge,
+  Loader,
 } from "@mantine/core";
 import {
   IconPencil,
@@ -39,6 +40,7 @@ const MyBooks = () => {
   return (
     <ScrollArea sx={{ height: "100%" }} type="never">
       <Table sx={{ minWidth: 800 }} verticalSpacing="md">
+        {isLoading && <Loader />}
         <tbody>{rows}</tbody>
         {books?.length === 0 && (
           <Text size="xl" weight="bold">
