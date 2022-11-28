@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
-import { Button, Modal, TextInput } from "@mantine/core";
+import { Button, Modal, TextInput, LoadingOverlay } from "@mantine/core";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -10,8 +10,10 @@ import { getTokenFromLocalStorage } from "../../utils/utils";
 
 const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
   const { user } = useContext(AuthContext);
+  const [visible, setVisible] = useState(false);
 
   const handleSaveOrder = (data) => {
+    setVisible(true);
     const seller = book.seller;
     const buyer = user.email;
     const bookId = book._id;
@@ -29,6 +31,7 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
           color: "green",
           icon: <IconCircleCheck />,
         });
+        setVisible(false);
         setShowCheckout(false);
       })
       .catch((err) => {
@@ -37,6 +40,7 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
           message: "Something went wrong",
           color: "red",
         });
+        setVisible(false);
         setShowCheckout(false);
       });
   };
@@ -54,6 +58,7 @@ const CheckoutForm = ({ showCheckout, setShowCheckout, book }) => {
 
   return (
     <Modal opened={showCheckout} onClose={() => setShowCheckout(false)}>
+      <LoadingOverlay visible={visible} overlayBlur={2} />
       <form onSubmit={form.onSubmit(handleSaveOrder)}>
         <TextInput
           label="Name"
