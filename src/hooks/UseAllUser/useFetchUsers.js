@@ -1,17 +1,17 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
+import API from "../../api/api";
+import { getTokenFromLocalStorage } from "../../utils/utils";
 
 const useFetchUsers = (seller = false, user = false) => {
   const getAllUser = async () => {
-    return fetch(`${process.env.REACT_APP_API_URL}/users`)
-      .then((res) => res.json())
-      .then((data) => {
-        return filterUser(filerSeller(data.data.users));
-      });
+    return API(getTokenFromLocalStorage())
+      .get(`/users`)
+      .then((res) => filterUser(filterSeller(res.data.data.users)));
   };
 
   // filter seller
-  const filerSeller = (users) => {
+  const filterSeller = (users) => {
     if (seller) return users.filter((user) => user.role === "seller");
     return users;
   };

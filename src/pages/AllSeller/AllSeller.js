@@ -22,6 +22,7 @@ import DeleteUserDialogue from "../../components/Dialogue/DeleteUserDialogue/Del
 import useFetchUsers from "../../hooks/UseAllUser/useFetchUsers";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { showNotification } from "@mantine/notifications";
+import API from "../../api/api";
 
 const jobColors = {
   admin: "blue",
@@ -33,12 +34,8 @@ const MenuBar = ({ user }) => {
   const queryClient = useQueryClient();
 
   const makeSellerVerified = () => {
-    return fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ isVerified: true }),
+    return API.patch(`/users/${user._id}`, {
+      isVerified: true,
     });
   };
 
