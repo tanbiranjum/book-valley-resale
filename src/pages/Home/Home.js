@@ -37,7 +37,7 @@ const Home = () => {
         )}
         <Grid gutter="md" mt="lg">
           {data?.map((item) => (
-            <Grid.Col xs={3} key={item._id}>
+            <Grid.Col xs={12} sm={6} md={4} lg={3} key={item._id}>
               <BookCard item={item} />
             </Grid.Col>
           ))}

@@ -1,4 +1,5 @@
 import { createStyles, Container, Title, Text, Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -75,6 +76,7 @@ const useStyles = createStyles((theme) => ({
 
 const HeroHeader = () => {
   const { classes } = useStyles();
+  const navigate = useNavigate();
   return (
     <div className={classes.root}>
       <Container size="xl">
@@ -105,6 +107,7 @@ const HeroHeader = () => {
               size="xl"
               className={classes.control}
               mt={40}
+              onClick={() => navigate("/dashboard")}
             >
               Get started
             </Button>

@@ -8,6 +8,7 @@ import {
   Menu,
   ScrollArea,
   Badge,
+  Image,
 } from "@mantine/core";
 import {
   IconPencil,
@@ -83,6 +84,7 @@ const ProductRow = ({ item }) => {
       <td>
         <Group spacing="sm">
           <div>
+            <Image src={item.photo} width="50px"/>
             <Text size="sm" weight={500}>
               {item.title}
             </Text>

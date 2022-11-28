@@ -115,7 +115,7 @@ const Category = () => {
           )}
           <Grid gutter="md">
             {data?.map((item) => (
-              <Grid.Col xs={4} key={item._id}>
+              <Grid.Col xs={12} sm={6} md={4} lg={4} key={item._id}>
                 <BookCard item={item} key={item._id} />
               </Grid.Col>
             ))}

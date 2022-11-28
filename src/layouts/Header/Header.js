@@ -188,23 +188,21 @@ const Header = () => {
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
-          <a href="#" className={classes.link}>
+          <Link to="/" className={classes.link} onClick={closeDrawer}>
             Home
-          </a>
-          <UnstyledButton className={classes.link} onClick={toggleLinks}>
-            <Center inline>
-              <Box component="span" mr={5}>
-                Features
-              </Box>
-              <IconChevronDown size={16} color={theme.fn.primaryColor()} />
-            </Center>
-          </UnstyledButton>
-          <a href="#" className={classes.link}>
-            Learn
-          </a>
-          <a href="#" className={classes.link}>
-            Academy
-          </a>
+          </Link>
+          <Link to="/blog" className={classes.link} onClick={closeDrawer}>
+            Blog
+          </Link>
+          {user?.displayName && (
+            <Link
+              to="/dashboard"
+              className={classes.link}
+              onClick={closeDrawer}
+            >
+              Dashboard
+            </Link>
+          )}
 
           <Divider
             my="sm"
@@ -216,6 +214,7 @@ const Header = () => {
               <Button
                 variant="default"
                 onClick={() => {
+                  toggleDrawer();
                   navigate("/login");
                 }}
               >
@@ -252,6 +251,7 @@ const Header = () => {
             {!user?.displayName && (
               <Button
                 onClick={() => {
+                  toggleDrawer();
                   navigate("/register");
                 }}
               >
