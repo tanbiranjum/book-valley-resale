@@ -56,7 +56,7 @@ const Rows = ({ item }) => {
         </Text>
       </td>
       <td>
-        {!item.status === "accepted" && (
+        {item.status === "pending" && (
           <Group spacing={0} position="right">
             <Button
               onClick={() => {
