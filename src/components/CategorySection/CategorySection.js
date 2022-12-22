@@ -80,19 +80,22 @@ const CategorySection = () => {
   }, []);
 
   const items = categories.map((item) => (
-    <UnstyledButton key={item._id} className={classes.item}>
-      <Link to={`/category/${item._id}`} className={classes.link}>
-        <ThemeIcon
-          size="lg"
-          variant="gradient"
-          gradient={{ from: "teal", to: "blue", deg: 60 }}
-        >
-          <IconCategory color={theme.colors.gray[1]} size="20px" />
-        </ThemeIcon>
-        <Text size="sm" weight="500" mt={7}>
-          {item.name}
-        </Text>
-      </Link>
+    <UnstyledButton
+      component={Link}
+      to={`/category/${item._id}`}
+      key={item._id}
+      className={classes.item}
+    >
+      <ThemeIcon
+        size="lg"
+        variant="gradient"
+        gradient={{ from: "pink", to: "yellow", deg: 60 }}
+      >
+        <IconCategory color={theme.colors.gray[1]} size="20px" />
+      </ThemeIcon>
+      <Text size="sm" weight="500" mt={7}>
+        {item.name}
+      </Text>
     </UnstyledButton>
   ));
 
