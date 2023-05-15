@@ -178,6 +178,8 @@ const Header = () => {
               opened={drawerOpened}
               onClick={toggleDrawer}
               className={classes.hiddenDesktop}
+              bg="yellow"
+              color="white"
             />
           </Group>
         </MantineHeader>
