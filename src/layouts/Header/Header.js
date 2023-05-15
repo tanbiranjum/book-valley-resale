@@ -6,30 +6,18 @@ import {
   Button,
   UnstyledButton,
   Divider,
-  Center,
   Box,
   Burger,
   Drawer,
-  Collapse,
   ScrollArea,
   Avatar,
   Menu,
   Text,
   Flex,
+  Container,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconNotification,
-  IconCode,
-  IconBook,
-  IconChartPie3,
-  IconFingerprint,
-  IconCoin,
-  IconChevronDown,
-  IconMessage,
-  IconSettings,
-  IconLogout,
-} from "@tabler/icons";
+import { IconSettings, IconLogout } from "@tabler/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import Logo from "../../assets/book-logo.png";
@@ -42,9 +30,11 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    fontWeight: 500,
-    fontSize: theme.fontSizes.sm,
+    background: "linear-gradient(pink, yellow)",
+    backgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    fontWeight: 700,
+    fontSize: theme.fontSizes.md,
 
     [theme.fn.smallerThan("sm")]: {
       height: 42,
@@ -90,88 +80,108 @@ const Header = () => {
   };
 
   return (
-    <Box>
-      <MantineHeader height={60}>
-        <Group position="apart" sx={{ height: "100%" }}>
-          <Flex>
-            <Link to="/" className={classes.link} style={{ padding: 0 }}>
-              <Avatar src={Logo} mr="sm"></Avatar>
-              <Text weight="bold">Book Valley</Text>
-            </Link>
-          </Flex>
-          <Group
-            sx={{ height: "100%" }}
-            spacing={0}
-            className={classes.hiddenMobile}
-          >
-            <Link to="/" className={classes.link}>
-              Home
-            </Link>
-            <Link to="/blog" className={classes.link}>
-              Blog
-            </Link>
-            {user?.displayName && (
-              <Link to="/dashboard" className={classes.link}>
-                Dashboard
+    <Box
+      sx={{
+        position: "absolute",
+        width: "100%",
+      }}
+    >
+      <Container size="xl">
+        <MantineHeader
+          height={60}
+          sx={{
+            backgroundColor: "transparent",
+            borderBottom: "0",
+          }}
+        >
+          <Group position="apart" sx={{ height: "100%" }}>
+            <Flex>
+              <Link to="/" className={classes.link} style={{ padding: 0 }}>
+                <Avatar src={Logo} mr="sm"></Avatar>
+                <Text weight="bold">Book Valley</Text>
               </Link>
-            )}
+            </Flex>
+            <Group
+              sx={{ height: "100%" }}
+              spacing={0}
+              className={classes.hiddenMobile}
+            >
+              <Link to="/" className={classes.link}>
+                Home
+              </Link>
+              <Link to="/blog" className={classes.link}>
+                Blog
+              </Link>
+              {user?.displayName && (
+                <Link to="/dashboard" className={classes.link}>
+                  Dashboard
+                </Link>
+              )}
+            </Group>
+            <Group className={classes.hiddenMobile}>
+              {!user?.displayName && (
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  Log in
+                </Button>
+              )}
+              {user?.displayName && (
+                <Menu width={260} position="bottom-start">
+                  <Menu.Target>
+                    <UnstyledButton
+                      sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+                    >
+                      <Avatar src={user.photoURL} radius="xl" size={30} />
+                      <Text
+                        weight={500}
+                        size="md"
+                        sx={{ lineHeight: 1 }}
+                        mr={3}
+                        variant="gradient"
+                        gradient={{ from: "pink", to: "yellow" }}
+                      >
+                        {user.displayName}
+                      </Text>
+                    </UnstyledButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Great Day!</Menu.Label>
+                    <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
+                      Account settings
+                    </Menu.Item>
+                    <Menu.Item
+                      color="red"
+                      onClick={handleLogout}
+                      icon={<IconLogout size={14} stroke={1.5} />}
+                    >
+                      Logout
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              )}
+              {!user?.displayName && (
+                <Button
+                  onClick={() => {
+                    navigate("/register");
+                  }}
+                >
+                  Register
+                </Button>
+              )}
+            </Group>
+            <Burger
+              ml="auto"
+              opened={drawerOpened}
+              onClick={toggleDrawer}
+              className={classes.hiddenDesktop}
+            />
           </Group>
-          <Group className={classes.hiddenMobile}>
-            {!user?.displayName && (
-              <Button
-                variant="default"
-                onClick={() => {
-                  navigate("/login");
-                }}
-              >
-                Log in
-              </Button>
-            )}
-            {user?.displayName && (
-              <Menu width={260} position="bottom-start">
-                <Menu.Target>
-                  <UnstyledButton
-                    sx={{ display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <Avatar src={user.photoURL} radius="xl" size={30} />
-                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                      {user.displayName}
-                    </Text>
-                  </UnstyledButton>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Great Day!</Menu.Label>
-                  <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
-                    Account settings
-                  </Menu.Item>
-                  <Menu.Item
-                    color="red"
-                    onClick={handleLogout}
-                    icon={<IconLogout size={14} stroke={1.5} />}
-                  >
-                    Logout
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            )}
-            {!user?.displayName && (
-              <Button
-                onClick={() => {
-                  navigate("/register");
-                }}
-              >
-                Register
-              </Button>
-            )}
-          </Group>
-          <Burger
-            ml="auto"
-            opened={drawerOpened}
-            onClick={toggleDrawer}
-            className={classes.hiddenDesktop}
-          />
-        </Group>
-      </MantineHeader>
+        </MantineHeader>
+      </Container>
 
       <Drawer
         opened={drawerOpened}

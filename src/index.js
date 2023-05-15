@@ -10,6 +10,7 @@ const theme = {
   globalStyles: (theme) => ({
     "*, *::before, *::after": {
       boxSizing: "border-box",
+      margin: "0"
     },
   }),
 };
