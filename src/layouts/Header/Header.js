@@ -21,6 +21,7 @@ import { IconSettings, IconLogout } from "@tabler/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import Logo from "../../assets/book-logo.png";
+import ThemeButton from "../../components/Button/Button";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -30,7 +31,7 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    background: "linear-gradient(pink, yellow)",
+    background: "linear-gradient(to right, pink, yellow)",
     backgroundClip: "text",
     WebkitTextFillColor: "transparent",
     fontWeight: 700,
@@ -120,14 +121,12 @@ const Header = () => {
             </Group>
             <Group className={classes.hiddenMobile}>
               {!user?.displayName && (
-                <Button
-                  variant="default"
+                <ThemeButton
+                  name="Log in"
                   onClick={() => {
                     navigate("/login");
                   }}
-                >
-                  Log in
-                </Button>
+                />
               )}
               {user?.displayName && (
                 <Menu width={260} position="bottom-start">
@@ -164,13 +163,13 @@ const Header = () => {
                 </Menu>
               )}
               {!user?.displayName && (
-                <Button
+                <ThemeButton
+                  name="Register"
+                  variant="gradient"
                   onClick={() => {
                     navigate("/register");
                   }}
-                >
-                  Register
-                </Button>
+                />
               )}
             </Group>
             <Burger
@@ -223,15 +222,13 @@ const Header = () => {
 
           <Group position="center" grow pb="xl" px="md">
             {!user?.displayName && (
-              <Button
-                variant="default"
+              <ThemeButton
+                name="Log in"
                 onClick={() => {
                   toggleDrawer();
                   navigate("/login");
                 }}
-              >
-                Log in
-              </Button>
+              />
             )}
             {user?.displayName && (
               <Menu width={260} position="bottom-start">
@@ -261,14 +258,14 @@ const Header = () => {
               </Menu>
             )}
             {!user?.displayName && (
-              <Button
+              <ThemeButton
+                name="Register"
+                variant="gradient"
                 onClick={() => {
                   toggleDrawer();
                   navigate("/register");
                 }}
-              >
-                Register
-              </Button>
+              />
             )}
           </Group>
         </ScrollArea>

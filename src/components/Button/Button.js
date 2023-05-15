@@ -1,10 +1,20 @@
-import React from 'react'
-import {Button as MantineButton} from '@mantine/core'
+import React from "react";
+import { Button as MantineButton } from "@mantine/core";
 
-const Button = ({name}) => {
-  return (
-    <MantineButton>{name}</MantineButton>
-  )
-}
+const ThemeButton = ({ name, variant = "default", ...others }) => {
+  return variant === "gradient" ? (
+    <MantineButton
+      {...others}
+      variant={variant}
+      gradient={{ from: "pink", to: "yellow" }}
+    >
+      {name}
+    </MantineButton>
+  ) : (
+    <MantineButton variant={variant} {...others}>
+      {name}
+    </MantineButton>
+  );
+};
 
-export default Button
+export default ThemeButton;
