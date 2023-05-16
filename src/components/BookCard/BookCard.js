@@ -27,6 +27,7 @@ const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    height: "100%",
   },
 
   imageSection: {

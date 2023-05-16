@@ -62,7 +62,12 @@ const Category = () => {
   });
 
   return (
-    <Container size="xl">
+    <Container
+      size="xl"
+      sx={{
+        paddingTop: "4rem",
+      }}
+    >
       <Grid mt="lg">
         <Grid.Col xs={3}>
           <Box

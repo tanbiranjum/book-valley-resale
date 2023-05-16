@@ -3,7 +3,6 @@ import {
   createStyles,
   Header as MantineHeader,
   Group,
-  Button,
   UnstyledButton,
   Divider,
   Box,
@@ -31,9 +30,7 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    background: "linear-gradient(to right, pink, yellow)",
-    backgroundClip: "text",
-    WebkitTextFillColor: "transparent",
+    background: "transparent",
     fontWeight: 700,
     fontSize: theme.fontSizes.md,
 
@@ -44,12 +41,6 @@ const useStyles = createStyles((theme) => ({
       width: "100%",
     },
 
-    ...theme.fn.hover({
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[0],
-    }),
   },
 
   hiddenMobile: {
@@ -64,6 +55,14 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
+
+const GradientText = ({ text }) => {
+  return (
+    <Text variant="gradient" gradient={{ from: "pink", to: "yellow" }}>
+      {text}
+    </Text>
+  );
+};
 
 const Header = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
@@ -99,7 +98,7 @@ const Header = () => {
             <Flex>
               <Link to="/" className={classes.link} style={{ padding: 0 }}>
                 <Avatar src={Logo} mr="sm"></Avatar>
-                <Text weight="bold">Book Valley</Text>
+                <GradientText text="Book Valley" />
               </Link>
             </Flex>
             <Group
@@ -108,14 +107,14 @@ const Header = () => {
               className={classes.hiddenMobile}
             >
               <Link to="/" className={classes.link}>
-                Home
+                <GradientText text="Home" />
               </Link>
               <Link to="/blog" className={classes.link}>
-                Blog
+                <GradientText text="Blog" />
               </Link>
               {user?.displayName && (
                 <Link to="/dashboard" className={classes.link}>
-                  Dashboard
+                  <GradientText text="Dashboard" />
                 </Link>
               )}
             </Group>
@@ -200,10 +199,10 @@ const Header = () => {
           />
 
           <Link to="/" className={classes.link} onClick={closeDrawer}>
-            Home
+            <GradientText text="Home" />
           </Link>
           <Link to="/blog" className={classes.link} onClick={closeDrawer}>
-            Blog
+            <GradientText text="Blog" />
           </Link>
           {user?.displayName && (
             <Link
