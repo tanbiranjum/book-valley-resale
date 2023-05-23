@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Grid,
   Box,
@@ -10,29 +11,15 @@ import {
   createStyles,
   Divider,
 } from "@mantine/core";
-import {
-  IconGauge,
-  IconFingerprint,
-  IconActivity,
-  IconChevronRight,
-  IconCategory,
-  IconSearch,
-} from "@tabler/icons";
+
+import { IconCategory, IconSearch } from "@tabler/icons";
+
 import BookCard from "../../components/BookCard/BookCard";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useCategory from "../../hooks/UseCategory/useCategory";
 import SkeletonLoader from "../../components/Skeleton/Skeleton";
-
-const data = [
-  { icon: IconGauge, label: "Dashboard", description: "Item with description" },
-  {
-    icon: IconFingerprint,
-    label: "Security",
-    rightSection: <IconChevronRight size={14} stroke={1.5} />,
-  },
-  { icon: IconActivity, label: "Activity" },
-];
+import API from "../../api/api";
 
 const useStyles = createStyles((theme) => ({
   searchCode: {
@@ -49,16 +36,14 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Category = () => {
-  const { categoryId } = useParams();
   const categoies = useCategory();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { classes } = useStyles();
-  const { data, isLoading, error } = useQuery(["books", categoryId], () => {
-    return fetch(
-      `${process.env.REACT_APP_API_URL}/books/category/${categoryId}`
-    )
-      .then((res) => res.json())
-      .then((data) => data.data.books);
+  const { data, isLoading, error } = useQuery(["books", state._id], () => {
+    return API()
+      .get(`/books?category=${state._id}`)
+      .then((res) => res.data.data.books);
   });
 
   return (
@@ -98,11 +83,13 @@ const Category = () => {
             </Text>
             {categoies?.map((item, index) => (
               <NavLink
-                //   key={item.label}
-                active={item._id === categoryId}
+                key={index}
+                active={item._id === state._id}
                 label={item.name}
                 icon={<IconCategory size={16} stroke={1.5} color="blue" />}
-                onClick={() => navigate(`/category/${item._id}`)}
+                onClick={() =>
+                  navigate(`/category/${item.name.toLowerCase()}`, { state: item })
+                }
                 color="cyan"
                 sx={(theme) => ({
                   borderBottom: `1px solid ${theme.colors.gray[2]}`,

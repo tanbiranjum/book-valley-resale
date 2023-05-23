@@ -58,7 +58,6 @@ const WishButton = ({ bookId }) => {
         }}
       >
         <IconHeart size={16} />
-        {console.log(wishlist)}
       </ActionIcon>
     </Tooltip>
   );

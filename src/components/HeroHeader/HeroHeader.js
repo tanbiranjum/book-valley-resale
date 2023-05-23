@@ -83,16 +83,15 @@ const HeroHeader = () => {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              Make{" "}
               <Text
                 component="span"
                 inherit
                 variant="gradient"
                 gradient={{ from: "pink", to: "yellow" }}
               >
-                The World
-              </Text>{" "}
-              More Open and Connected
+                One Book
+              </Text>{" "} <br />
+              Thousand Feelings!
             </Title>
 
             <Text className={classes.description} mt={30}>
