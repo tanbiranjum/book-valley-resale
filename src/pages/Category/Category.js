@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Grid,
@@ -10,13 +10,22 @@ import {
   Code,
   createStyles,
   Divider,
+  Menu,
+  Button,
+  Select,
+  Space,
+  SegmentedControl,
 } from "@mantine/core";
 
-import { IconCategory, IconSearch } from "@tabler/icons";
+import {
+  IconCategory,
+  IconSearch,
+  IconAdjustmentsHorizontal,
+} from "@tabler/icons";
 
 import BookCard from "../../components/BookCard/BookCard";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useCategory from "../../hooks/UseCategory/useCategory";
 import SkeletonLoader from "../../components/Skeleton/Skeleton";
 import API from "../../api/api";
@@ -36,15 +45,41 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Category = () => {
-  const categoies = useCategory();
+  const categories = useCategory();
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { categoryId } = useParams();
   const { classes } = useStyles();
-  const { data, isLoading, error } = useQuery(["books", state._id], () => {
-    return API()
-      .get(`/books?category=${state._id}`)
-      .then((res) => res.data.data.books);
+  const [query, setQuery] = React.useState({
+    state: false,
+    condition: "",
+    sort: false,
   });
+
+  const fetchBooks = async () => {
+    const result = await API().get(`/books?category=${categoryId}`);
+    return result.data.data.books;
+  };
+
+  const { data, isLoading, error, refetch } = useQuery(
+    ["books", categoryId, query.condition, query.sort],
+    fetchBooks
+  );
+
+  const queryStringBuilder = () => {
+    if (!query.state) return "";
+    let queryString = "";
+    if (query.condition) {
+      queryString = `&condition=${query.condition}`;
+    }
+    if (query.sort) {
+      queryString = queryString + `&sort=true`;
+    }
+    return queryString;
+  };
+
+  const handleConditionChange = (value) => {
+    setQuery({ ...query, condition: value });
+  };
 
   return (
     <Container
@@ -81,15 +116,13 @@ const Category = () => {
             <Text weight={600} ml="md" mb="sm" mt="lg">
               Category
             </Text>
-            {categoies?.map((item, index) => (
+            {categories?.map((item, index) => (
               <NavLink
                 key={index}
-                active={item._id === state._id}
+                active={item._id === categoryId}
                 label={item.name}
                 icon={<IconCategory size={16} stroke={1.5} color="blue" />}
-                onClick={() =>
-                  navigate(`/category/${item.name.toLowerCase()}`, { state: item })
-                }
+                onClick={() => navigate(`/category/${item._id}`)}
                 color="cyan"
                 sx={(theme) => ({
                   borderBottom: `1px solid ${theme.colors.gray[2]}`,
@@ -99,6 +132,54 @@ const Category = () => {
           </Box>
         </Grid.Col>
         <Grid.Col xs={9}>
+          <Menu position="bottom-start">
+            <Menu.Target>
+              <Button
+                variant="outline"
+                color="blue"
+                leftIcon={<IconAdjustmentsHorizontal />}
+              >
+                Filter
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown sx={{ padding: "8px" }}>
+              <Select
+                label="Book Condition"
+                placeholder="Pick one"
+                onChange={handleConditionChange}
+                value={query.condition}
+                data={[
+                  { value: "used", label: "Used" },
+                  { value: "new", label: "New" },
+                ]}
+              />
+              <Space h="sm" />
+              <Text weight={600} size="sm">
+                Price
+              </Text>
+              <SegmentedControl
+                data={[
+                  { label: "Lowest to Highest", value: "react" },
+                  { label: "Highest to Lowest", value: "ng" },
+                ]}
+              />
+              <Divider sx={{ padding: "8px 0" }} />
+              <Button
+                variant="outline"
+                color="blue"
+                onClick={() => {
+                  setQuery({
+                    ...query,
+                    condition: "",
+                    sort: false,
+                  });
+                }}
+              >
+                Reset
+              </Button>
+            </Menu.Dropdown>
+          </Menu>
+          <Space h="md" />
           {isLoading && <SkeletonLoader />}
           {data?.length === 0 && (
             <Text size="xl" weight="bold">

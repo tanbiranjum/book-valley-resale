@@ -19,7 +19,7 @@ import {
   IconCategory,
 } from "@tabler/icons";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const mockdata = [
   { title: "Fiction", icon: IconCreditCard, color: "violet" },
@@ -70,7 +70,6 @@ const useStyles = createStyles((theme) => ({
 const CategorySection = () => {
   const { classes, theme } = useStyles();
   const [categories, setCategories] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/categories`)
@@ -82,9 +81,10 @@ const CategorySection = () => {
 
   const items = categories.map((item) => (
     <UnstyledButton
-      onClick={() => navigate(`/category/${item.name.toLowerCase()}`, { state: item })}
       key={item._id}
       className={classes.item}
+      component={Link}
+      to={`/category/${item._id}`}
     >
       <ThemeIcon
         size="lg"
