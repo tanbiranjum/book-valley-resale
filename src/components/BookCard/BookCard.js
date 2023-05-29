@@ -63,6 +63,13 @@ const useStyles = createStyles((theme) => ({
         ? theme.colors.dark[2]
         : theme.colors.gray[5],
   },
+
+  docContainer: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 }));
 
 const BookCard = ({ item }) => {
@@ -113,11 +120,13 @@ const BookCard = ({ item }) => {
         </Card.Section>
 
         <Group position="apart" mt="md">
-          <div>
-            <Text weight={500}>{item.title}</Text>
-            <Text size="xs" color="dimmed">
-              {item.description}
-            </Text>
+          <div className={classes.docContainer}>
+            <div>
+              <Text weight={500}>{item.title}</Text>
+              <Text size="xs" color="dimmed">
+                {item.description}
+              </Text>
+            </div>
             {user && role === "buyer" && <WishButton bookId={item._id} />}
           </div>
         </Group>

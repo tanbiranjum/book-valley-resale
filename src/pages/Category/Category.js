@@ -56,25 +56,29 @@ const Category = () => {
   });
 
   const fetchBooks = async () => {
-    const result = await API().get(`/books?category=${categoryId}`);
+    const result = await API().get(
+      `/books?category=${categoryId}&${queryBuilder()}`
+    );
     return result.data.data.books;
   };
 
   const { data, isLoading, error, refetch } = useQuery(
     ["books", categoryId, query.condition, query.sort],
-    fetchBooks
+    fetchBooks,
+    {
+      cacheTime: 50000,
+    }
   );
 
-  const queryStringBuilder = () => {
-    if (!query.state) return "";
-    let queryString = "";
+  const queryBuilder = () => {
+    const searchParams = new URLSearchParams();
     if (query.condition) {
-      queryString = `&condition=${query.condition}`;
+      searchParams.append("condition", query.condition);
     }
     if (query.sort) {
-      queryString = queryString + `&sort=true`;
+      searchParams.append("sort", query.sort);
     }
-    return queryString;
+    return searchParams.toString();
   };
 
   const handleConditionChange = (value) => {
@@ -163,10 +167,11 @@ const Category = () => {
                   { label: "Highest to Lowest", value: "ng" },
                 ]}
               />
-              <Divider sx={{ padding: "8px 0" }} />
+              <br />
               <Button
                 variant="outline"
                 color="blue"
+                sx={{ marginTop: "8px" }}
                 onClick={() => {
                   setQuery({
                     ...query,

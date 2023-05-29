@@ -1,5 +1,5 @@
-import { CopyButton, ActionIcon, Tooltip, createStyles } from "@mantine/core";
-import { IconCopy, IconHeart } from "@tabler/icons";
+import { ActionIcon, Tooltip, createStyles } from "@mantine/core";
+import { IconBookmark, IconBookmarkOff } from "@tabler/icons";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
@@ -53,11 +53,17 @@ const WishButton = ({ bookId }) => {
       color={wishlist ? theme.colors.pink[6] : theme.colors.red[6]}
     >
       <ActionIcon
+        variant={wishlist ? "light" : "transparent"}
+        sx={{ color: wishlist ? theme.colors.pink[6] : theme.colors.red[6] }}
         onClick={() => {
           wishlist ? handleDeleteFromWishlist() : handleSaveToWishlist();
         }}
       >
-        <IconHeart size={16} />
+        {wishlist ? (
+          <IconBookmarkOff size="20px" />
+        ) : (
+          <IconBookmark size="20px" />
+        )}
       </ActionIcon>
     </Tooltip>
   );

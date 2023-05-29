@@ -1,7 +1,6 @@
-import { Container, Grid, Text } from "@mantine/core";
+import { Container, Grid, Pagination, Text } from "@mantine/core";
 import React from "react";
 import BookCard from "../../components/BookCard/BookCard";
-import Button from "../../components/Button/Button";
 import CategorySection from "../../components/CategorySection/CategorySection";
 import HeroHeader from "../../components/HeroHeader/HeroHeader";
 import { useQuery } from "@tanstack/react-query";
@@ -9,10 +8,18 @@ import SubscribeNewsletter from "./Shared/SubscribeNewsletter/SubscribeNewslette
 import SkeletonLoader from "../../components/Skeleton/Skeleton";
 
 const Home = () => {
-  const { data, isLoading, error } = useQuery(["books"], () =>
-    fetch(`${process.env.REACT_APP_API_URL}/books`)
+  const [page, setPage] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(1);
+  const { data, isLoading, error } = useQuery(["books", page], () =>
+    fetch(`${process.env.REACT_APP_API_URL}/books?page=${page}&limit=4`)
       .then((res) => res.json())
-      .then((data) => data.data.books)
+      .then((data) => {
+        const totalCounts = data.total_counts * 1;
+        const perPage = data.per_page * 1;
+        console.log(totalCounts, perPage);
+        setTotalPage(Math.ceil(totalCounts / perPage));
+        return data.data.books;
+      })
   );
   return (
     <div>
@@ -20,7 +27,7 @@ const Home = () => {
       <CategorySection />
       <Container size="xl" sx={{ marginTop: "40px" }}>
         <Text size="lg" weight="bold" mb="md">
-          Book On Sale
+          Latest Book On Sale
         </Text>
         {isLoading && <SkeletonLoader />}
         {data?.length === 0 && (
@@ -42,6 +49,12 @@ const Home = () => {
             </Grid.Col>
           ))}
         </Grid>
+        <Pagination
+          sx={{ marginTop: "40px" }}
+          value={page}
+          onChange={setPage}
+          total={totalPage}
+        />
       </Container>
       <Container size="xl" mt="md">
         <SubscribeNewsletter />
