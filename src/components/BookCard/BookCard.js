@@ -1,26 +1,12 @@
-import {
-  Card,
-  Image,
-  Text,
-  Group,
-  Badge,
-  createStyles,
-  Center,
-  Button,
-} from "@mantine/core";
-import {
-  IconGauge,
-  IconUsers,
-  IconLocation,
-  IconCircleCheck,
-} from "@tabler/icons";
-import { useContext, useState } from "react";
+import { Card, Image, Text, Group, Badge, createStyles } from "@mantine/core";
+
+import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
-import CheckoutForm from "../CheckoutForm/CheckoutForm";
 import WishButton from "../WishButton/WishButton";
 import formatDistance from "date-fns/formatDistance";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useRole from "../../hooks/UseRole/useRole";
+import CheckoutButton from "../Button/CheckoutButton";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -74,35 +60,8 @@ const useStyles = createStyles((theme) => ({
 
 const BookCard = ({ item }) => {
   const { classes } = useStyles();
-  const [showCheckout, setShowCheckout] = useState(false);
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [role] = useRole();
-
-  const mockdata = [
-    { label: item.author, icon: IconUsers },
-    { label: item.useOfYears, icon: IconGauge },
-    { label: item.location, icon: IconLocation },
-  ];
-
-  const handleCheckout = () => {
-    if (user) {
-      if (role === "seller" || role === "admin") {
-        alert("You are not allowed to buy your own book");
-        return;
-      }
-      setShowCheckout(true);
-    } else {
-      navigate("/login");
-    }
-  };
-
-  const features = mockdata.map((feature) => (
-    <Center key={feature.label}>
-      <feature.icon size={18} className={classes.icon} stroke={1.5} />
-      <Text size="xs">{feature.label}</Text>
-    </Center>
-  ));
 
   return (
     <>
@@ -121,7 +80,9 @@ const BookCard = ({ item }) => {
 
         <Group position="apart" mt="md">
           <div className={classes.docContainer}>
-            <Text weight={500}>{item.title}</Text>
+            <Link to={`/book/${item._id}`}>
+              <Text weight={500}>{item.title}</Text>
+            </Link>
             {/* <Text size="xs" color="dimmed">
                 {item.description}
               </Text> */}
@@ -130,10 +91,7 @@ const BookCard = ({ item }) => {
         </Group>
 
         <Card.Section className={classes.section}>
-          <Badge
-            variant="filled"
-            color="green"
-          >
+          <Badge variant="filled" color="green">
             {(
               ((item.originalPrice * 1 - item.sellingPrice * 1) /
                 (item.originalPrice * 1)) *
@@ -146,33 +104,12 @@ const BookCard = ({ item }) => {
           </Badge>
           <br />
           <Text mt="sm" size="sm" weight="400">
-            {/* <Text
-              color="cyan"
-              weight="500"
-              sx={{ display: "flex", alignItems: "center", gap: "4px" }}
-            >
-              {item.seller.displayName}{" "}
-              {item.seller.isVerified && (
-                <IconCircleCheck color="blue" size="18" />
-              )}
-            </Text> */}
             {` Posted ${formatDistance(
               new Date(item.createdAt),
               new Date()
             )} ago`}
           </Text>
         </Card.Section>
-
-        {/* <Card.Section className={classes.section} mt="md">
-          <Text size="sm" color="dimmed" className={classes.label}>
-            {item.category.name}
-          </Text>
-
-          <Group spacing={8} mb={-8}>
-            {features}
-          </Group>
-        </Card.Section> */}
-
         <Card.Section className={classes.section}>
           <Group spacing={30}>
             <div>
@@ -189,19 +126,10 @@ const BookCard = ({ item }) => {
                 Resell Price
               </Text>
             </div>
-            <Button radius="xl" style={{ flex: 1 }} onClick={handleCheckout}>
-              Book now
-            </Button>
+            <CheckoutButton book={item} />
           </Group>
         </Card.Section>
       </Card>
-      {user?.email && (
-        <CheckoutForm
-          showCheckout={showCheckout}
-          setShowCheckout={setShowCheckout}
-          book={item}
-        />
-      )}
     </>
   );
 };

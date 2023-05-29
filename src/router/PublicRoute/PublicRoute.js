@@ -20,6 +20,7 @@ import Wishlist from "../../pages/Wishlist/Wishlist";
 import AdminRoute from "../AdminRoute/AdminRoute";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import SellerRoute from "../SellerRoute.js/SellerRoute";
+import BookDetails from "../../pages/BookDetails/BookDetails";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
             <Category />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/book/:bookId",
+        element: <BookDetails />,
       },
       {
         path: "/blog",
