@@ -10,12 +10,11 @@ import {
 } from "@mantine/core";
 import {
   IconGauge,
-  IconManualGearbox,
   IconUsers,
   IconLocation,
   IconCircleCheck,
 } from "@tabler/icons";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import CheckoutForm from "../CheckoutForm/CheckoutForm";
 import WishButton from "../WishButton/WishButton";
@@ -69,6 +68,7 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingBottom: theme.spacing.sm,
   },
 }));
 
@@ -121,18 +121,19 @@ const BookCard = ({ item }) => {
 
         <Group position="apart" mt="md">
           <div className={classes.docContainer}>
-            <div>
-              <Text weight={500}>{item.title}</Text>
-              <Text size="xs" color="dimmed">
+            <Text weight={500}>{item.title}</Text>
+            {/* <Text size="xs" color="dimmed">
                 {item.description}
-              </Text>
-            </div>
+              </Text> */}
             {user && role === "buyer" && <WishButton bookId={item._id} />}
           </div>
         </Group>
 
         <Card.Section className={classes.section}>
-          <Badge variant="outline">
+          <Badge
+            variant="filled"
+            color="green"
+          >
             {(
               ((item.originalPrice * 1 - item.sellingPrice * 1) /
                 (item.originalPrice * 1)) *
@@ -145,7 +146,7 @@ const BookCard = ({ item }) => {
           </Badge>
           <br />
           <Text mt="sm" size="sm" weight="400">
-            <Text
+            {/* <Text
               color="cyan"
               weight="500"
               sx={{ display: "flex", alignItems: "center", gap: "4px" }}
@@ -154,7 +155,7 @@ const BookCard = ({ item }) => {
               {item.seller.isVerified && (
                 <IconCircleCheck color="blue" size="18" />
               )}
-            </Text>
+            </Text> */}
             {` Posted ${formatDistance(
               new Date(item.createdAt),
               new Date()
@@ -162,7 +163,7 @@ const BookCard = ({ item }) => {
           </Text>
         </Card.Section>
 
-        <Card.Section className={classes.section} mt="md">
+        {/* <Card.Section className={classes.section} mt="md">
           <Text size="sm" color="dimmed" className={classes.label}>
             {item.category.name}
           </Text>
@@ -170,7 +171,7 @@ const BookCard = ({ item }) => {
           <Group spacing={8} mb={-8}>
             {features}
           </Group>
-        </Card.Section>
+        </Card.Section> */}
 
         <Card.Section className={classes.section}>
           <Group spacing={30}>
