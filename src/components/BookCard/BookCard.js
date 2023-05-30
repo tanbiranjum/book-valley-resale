@@ -56,6 +56,11 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     paddingBottom: theme.spacing.sm,
   },
+
+  title: {
+    textDecoration: "none",
+    color: theme.colors.blue[7],
+  },
 }));
 
 const BookCard = ({ item }) => {
@@ -80,7 +85,7 @@ const BookCard = ({ item }) => {
 
         <Group position="apart" mt="md">
           <div className={classes.docContainer}>
-            <Link to={`/book/${item._id}`}>
+            <Link to={`/book/${item._id}`} className={classes.title}>
               <Text weight={500}>{item.title}</Text>
             </Link>
             {/* <Text size="xs" color="dimmed">

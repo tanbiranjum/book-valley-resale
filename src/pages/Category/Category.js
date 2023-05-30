@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import {
   Grid,
   Box,
-  NavLink,
   Container,
   Text,
   TextInput,
@@ -17,18 +16,13 @@ import {
   SegmentedControl,
 } from "@mantine/core";
 
-import {
-  IconCategory,
-  IconSearch,
-  IconAdjustmentsHorizontal,
-} from "@tabler/icons";
+import { IconSearch, IconAdjustmentsHorizontal } from "@tabler/icons";
 
 import BookCard from "../../components/BookCard/BookCard";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import useCategory from "../../hooks/UseCategory/useCategory";
 import SkeletonLoader from "../../components/Skeleton/Skeleton";
-import API from "../../api/api";
+import { useParams } from "react-router-dom";
+import useFetchBooks from "../../hooks/UseFetchBooks/useFetchBooks";
+import CategorySidebar from "../../components/CategorySidebar/CategorySidebar";
 
 const useStyles = createStyles((theme) => ({
   searchCode: {
@@ -45,45 +39,13 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Category = () => {
-  const categories = useCategory();
-  const navigate = useNavigate();
   const { categoryId } = useParams();
   const { classes } = useStyles();
-  const [query, setQuery] = React.useState({
-    state: false,
-    condition: "",
-    sort: false,
-  });
 
-  const fetchBooks = async () => {
-    const result = await API().get(
-      `/books?category=${categoryId}&${queryBuilder()}`
-    );
-    return result.data.data.books;
-  };
-
-  const { data, isLoading, error, refetch } = useQuery(
-    ["books", categoryId, query.condition, query.sort],
-    fetchBooks,
-    {
-      cacheTime: 50000,
-    }
-  );
-
-  const queryBuilder = () => {
-    const searchParams = new URLSearchParams();
-    if (query.condition) {
-      searchParams.append("condition", query.condition);
-    }
-    if (query.sort) {
-      searchParams.append("sort", query.sort);
-    }
-    return searchParams.toString();
-  };
-
-  const handleConditionChange = (value) => {
-    setQuery({ ...query, condition: value });
-  };
+  const { data, isLoading, setCategory, setCondition, condition } =
+    useFetchBooks({
+      category: categoryId || undefined,
+    });
 
   return (
     <Container
@@ -117,22 +79,11 @@ const Category = () => {
               mb="lg"
             />
             <Divider />
-            <Text weight={600} ml="md" mb="sm" mt="lg">
-              Category
-            </Text>
-            {categories?.map((item, index) => (
-              <NavLink
-                key={index}
-                active={item._id === categoryId}
-                label={item.name}
-                icon={<IconCategory size={16} stroke={1.5} color="blue" />}
-                onClick={() => navigate(`/category/${item._id}`)}
-                color="cyan"
-                sx={(theme) => ({
-                  borderBottom: `1px solid ${theme.colors.gray[2]}`,
-                })}
-              />
-            ))}
+            {/* Category Sidebar */}
+            <CategorySidebar
+              categoryId={categoryId}
+              setCategory={setCategory}
+            />
           </Box>
         </Grid.Col>
         <Grid.Col xs={9}>
@@ -150,8 +101,10 @@ const Category = () => {
               <Select
                 label="Book Condition"
                 placeholder="Pick one"
-                onChange={handleConditionChange}
-                value={query.condition}
+                onChange={(value) => {
+                  setCondition(value);
+                }}
+                value={condition}
                 data={[
                   { value: "used", label: "Used" },
                   { value: "new", label: "New" },
@@ -173,11 +126,7 @@ const Category = () => {
                 color="blue"
                 sx={{ marginTop: "8px" }}
                 onClick={() => {
-                  setQuery({
-                    ...query,
-                    condition: "",
-                    sort: false,
-                  });
+                  setCondition("");
                 }}
               >
                 Reset

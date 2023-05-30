@@ -84,7 +84,7 @@ const CategorySection = () => {
       key={item._id}
       className={classes.item}
       component={Link}
-      to={`/category/${item._id}`}
+      to={`book/category/${item._id}`}
     >
       <ThemeIcon
         size="lg"

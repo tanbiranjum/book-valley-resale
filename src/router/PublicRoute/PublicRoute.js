@@ -40,16 +40,20 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "/category/:categoryId",
+        path: "/book",
+        element: <Category />,
+      },
+      {
+        path: "/book/:bookId",
+        element: <BookDetails />,
+      },
+      {
+        path: "book/category/:categoryId",
         element: (
           <PrivateRoute>
             <Category />
           </PrivateRoute>
         ),
-      },
-      {
-        path: "/book/:bookId",
-        element: <BookDetails />,
       },
       {
         path: "/blog",

@@ -1,21 +1,19 @@
 import {
+  Box,
   Button,
-  Center,
   Container,
   Flex,
   Grid,
   Text,
   createStyles,
 } from "@mantine/core";
-import {
-  IconCircleCheck,
-  IconGauge,
-  IconUsers,
-  IconLocation,
-} from "@tabler/icons";
+import { IconCircleCheck, IconGauge, IconLocation } from "@tabler/icons";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import formatDistance from "date-fns/formatDistance";
+import CheckoutButton from "../../components/Button/CheckoutButton";
+import ReactImageMagnify from "react-image-magnify";
+import WishButton from "../../components/WishButton/WishButton";
 
 const useStyles = createStyles((theme) => ({
   textIcon: {
@@ -48,27 +46,35 @@ const BookDetails = () => {
       });
   }, []);
 
-  //   const mockdata = [
-  //     { label: book?.author, icon: IconUsers },
-  //     { label: book?.useOfYears, icon: IconGauge },
-  //     { label: book?.location, icon: IconLocation },
-  //   ];
-
-  //   const features = mockdata.map((feature) => (
-  //     <Center key={feature.label}>
-  //       <feature.icon size={18} className={classes.icon} stroke={1.5} />
-  //       <Text size="xs">{feature.label}</Text>
-  //     </Center>
-  //   ));
-
   return (
     <Container size="xl" style={{ paddingTop: 80, paddingBottom: 80 }}>
-      <Grid gutter="xl">
+      <Grid gutter={60}>
         <Grid.Col xs={12} md={6}>
-          <img src={book?.photo} alt={book?.title} style={{ width: "100%" }} />
+          {book?.photo && (
+            <ReactImageMagnify
+              {...{
+                smallImage: {
+                  alt: "Wristwatch by Ted Baker London",
+                  isFluidWidth: true,
+                  src: book?.photo,
+                },
+                largeImage: {
+                  src: book?.photo,
+                  width: 1200,
+                  height: 1800,
+                },
+                enlargedImageContainerDimensions: {
+                  width: "100%",
+                  height: "100%",
+                },
+                enlargedImageContainerStyle: {
+                  zIndex: 9999,
+                },
+              }}
+            />
+          )}
         </Grid.Col>
         <Grid.Col xs={12} md={6}>
-          {/* i will put a text and icon of verified seller */}
           <Flex>
             {book.seller?.isVerified && (
               <Text
@@ -83,12 +89,17 @@ const BookDetails = () => {
             )}
             <Text size="xs" weight="bold" color="gray" ml="sm">
               Posted by {book?.seller?.displayName}{" "}
-              {formatDistance(new Date(book.createdAt), new Date())} ago
+              {book?.createdAt &&
+                formatDistance(new Date(book.createdAt), new Date())}{" "}
+              ago
             </Text>
           </Flex>
-          <Text size="xl" weight="bold">
-            {book?.title}
-          </Text>
+          <Flex gap={5} align="center" sx={{ marginTop: "16px" }}>
+            <Text size="xl" weight="bold">
+              {book?.title}
+            </Text>
+            {book?._id && <WishButton bookId={book?._id} />}
+          </Flex>
           <Flex gap={5}>
             <Text size="sm" weight="bold" color="gray">
               Author: {book?.author}
@@ -120,7 +131,21 @@ const BookDetails = () => {
               Location: {book?.location}
             </Text>
           </div>
-          <Flex gap={20} mt="md" align="center">
+          <Flex gap={20} mt="md" align="center" sx={{ marginTop: "24px" }}>
+            <div>
+              <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+                $ {book?.sellingPrice}
+              </Text>
+              <Text
+                size="sm"
+                color="dimmed"
+                weight={500}
+                sx={{ lineHeight: 1 }}
+                mt={3}
+              >
+                Resell Price
+              </Text>
+            </div>
             <div>
               <Text
                 strikethrough="true"
@@ -138,20 +163,6 @@ const BookDetails = () => {
                 mt={3}
               >
                 Original Price
-              </Text>
-            </div>
-            <div>
-              <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                $ {book?.sellingPrice}
-              </Text>
-              <Text
-                size="sm"
-                color="dimmed"
-                weight={500}
-                sx={{ lineHeight: 1 }}
-                mt={3}
-              >
-                Resell Price
               </Text>
             </div>
           </Flex>
@@ -176,14 +187,13 @@ const BookDetails = () => {
               </Button.Group>
             </div>
           </Flex>
+          <Box sx={{ marginTop: "24px" }}>
+            {book && <CheckoutButton book={book} />}
+          </Box>
         </Grid.Col>
       </Grid>
-      <h1>Book Details</h1>
-      {JSON.stringify(book)}
     </Container>
   );
 };
 
 export default BookDetails;
-
-// {"_id":"6384bec5a4d2c7696ec278b6","title":"It Starts With You","author":"Kamal Hasan","photo":"https://i.ibb.co/h70kNNc/Small-Pv-Free-BOOK-COVER-MOCKUP.jpg","category":{"_id":"637f7fd8a51c5f0238b1f019","name":"Fiction","__v":0},"location":"Florida, United States","description":"Fresh new copy","originalPrice":700,"sellingPrice":500,"useOfYears":"2-3","seller":{"_id":"63836344cd62635d8ee974da","displayName":"John Doe","photoURL":"https://i.ibb.co/6vGvpHH/profile.jpg","email":"tanbiranjum@hotmail.com","role":"seller","isVerified":true,"__v":0},"condition":"new","status":"available","isAdvertise":true,"createdAt":"2022-11-28T13:59:33.318Z","__v":0,"discount":"29","id":"6384bec5a4d2c7696ec278b6"}
