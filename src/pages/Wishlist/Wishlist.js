@@ -1,24 +1,15 @@
 import React, { useState } from "react";
 import {
-  Avatar,
   Table,
   Group,
   Text,
   ActionIcon,
-  Menu,
   ScrollArea,
   Badge,
   Button,
   Loader,
 } from "@mantine/core";
-import {
-  IconPencil,
-  IconMessages,
-  IconNote,
-  IconMicrophone,
-  IconTrash,
-  IconDots,
-} from "@tabler/icons";
+import { IconTrash } from "@tabler/icons";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -97,7 +88,6 @@ const Rows = ({ item }) => {
         </ActionIcon>
       </td>
       <td>
-        {console.log(item)}
         {item.bookId.isAdvertise && (
           <Button onClick={() => setShowCheckout(true)}>Pay</Button>
         )}
@@ -114,9 +104,7 @@ const Rows = ({ item }) => {
 const Wishlist = () => {
   const { user } = useContext(AuthContext);
   const { data: wishlists, isLoading } = useQuery(["myWishlist"], () => {
-    return fetch(
-      `${process.env.REACT_APP_API_URL}/wishlists?email=${user.email}`
-    )
+    return fetch(`${process.env.REACT_APP_API_URL}/wishlists/user/${user._id}`)
       .then((res) => res.json())
       .then((data) => data.data.wishlist);
   });
